@@ -19,8 +19,8 @@ Escena::Escena()
     ejes.changeAxisSize( 5000 );
 
     // crear los objetos de la escena....
-    // .......completar: ...
-    // .....
+    cubo = new Cubo(); 
+    tetraedro = new Tetraedro();  
 
 }
 
@@ -57,6 +57,8 @@ void Escena::dibujar()
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 	change_observer();
     ejes.draw();
+    //cubo->draw();
+    tetraedro->draw();
     // COMPLETAR
     //   Dibujar los diferentes elementos de la escena
     // Habrá que tener en esta primera práctica una variable que indique qué objeto se ha de visualizar
