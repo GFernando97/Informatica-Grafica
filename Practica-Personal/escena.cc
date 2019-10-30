@@ -57,8 +57,8 @@ void Escena::dibujar()
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 	change_observer();
     ejes.draw();
-    //cubo->draw();
-    tetraedro->draw();
+    cubo->draw();
+    //tetraedro->draw();
     // COMPLETAR
     //   Dibujar los diferentes elementos de la escena
     // Habrá que tener en esta primera práctica una variable que indique qué objeto se ha de visualizar
