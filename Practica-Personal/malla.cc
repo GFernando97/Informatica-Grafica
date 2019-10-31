@@ -47,13 +47,50 @@ void Malla3D::draw_ModoDiferido()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, identificadorVBOf);
 	glDrawElements(GL_TRIANGLES, 3*f.size(),GL_UNSIGNED_INT, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
 }
 // -----------------------------------------------------------------------------
+// Visualización en modo Ajedrez
+
+void Malla3D::draw_ModoAjedrez(int inicio){
+	std::vector<Tupla3i> chessF;
+
+  	for (int i = inicio; i < f.size(); i += 2)
+    	chessF.push_back(f[i]);
+
+  	glEnableClientState(GL_VERTEX_ARRAY);
+  	glVertexPointer(3, GL_FLOAT, 3, v.data());
+  	glDrawElements(GL_TRIANGLES, chessF.size()*3, GL_UNSIGNED_INT, chessF.data());
+  	glDisableClientState(GL_VERTEX_ARRAY);
+
+}
+
+//-----------------------------------------------------------------------------
 // Función de visualización de la malla,
 // puede llamar a  draw_ModoInmediato o bien a draw_ModoDiferido
 
-void Malla3D::draw()
+void Malla3D::draw(int modoDibujado, bool chessMode, int inicio)
 {
-	draw_ModoInmediato();
+	if(chessMode==false){
+		if(modoDibujado==1){
+			draw_ModoInmediato();
+		}
+		else draw_ModoDiferido();
+	}
+	
+
+	else draw_ModoAjedrez(inicio);
+}
+
+//-----------------------------------------------------------------------------
+// Función de calcular normales
+void Malla3D::calcular_normales(){
+
+	glEnable(GL_NORMALIZE);
+
+	for(int i = 0; i < v.size(); i++){
+		
+	}
 }
 

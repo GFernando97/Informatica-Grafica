@@ -34,7 +34,8 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
 {
 	glClearColor( 1.0, 1.0, 1.0, 1.0 );// se indica cual sera el color para limpiar la ventana	(r,v,a,al)
 
-	glEnable( GL_DEPTH_TEST );	// se habilita el z-bufer
+	glEnable(GL_CULL_FACE);
+  glEnable( GL_DEPTH_TEST );	// se habilita el z-bufer
 
 	Width  = UI_window_width/10;
 	Height = UI_window_height/10;
@@ -52,20 +53,85 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
 //
 // **************************************************************************
 
+void Escena::confParametrosDibujado(){
+  using namespace std;
+
+  int dibujadoSeleccionado=1;
+  glPointSize(10);
+  glShadeModel(GL_FLAT);
+
+  bool chessModeActivado = false;
+  switch(modoVisualizacion){
+    case PUNTOS:
+      glColor3f(41, 128, 185);
+      glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+    break;
+
+    case LINEAS:
+      glColor3f(41, 128, 185);
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    break;
+
+    case SOLIDO:
+      glColor3f(41, 128, 185);
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    break;
+
+    case CHESSMODE:
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      chessModeActivado=true;
+  }
+
+  switch (modoDibujado){
+    case INMEDIATO:
+      dibujadoSeleccionado=1;
+    break;
+
+    case DIFERIDO:
+      dibujadoSeleccionado=0;
+    break;
+
+  }
+
+  switch(objetoSeleccionado){
+    case CUBO:
+      if(cubo!=nullptr){
+        if(modoVisualizacion!=CHESSMODE){
+          cubo->draw(dibujadoSeleccionado, chessModeActivado);
+        }
+        else{
+          glColor3f(41, 128, 185);
+          cubo->draw(dibujadoSeleccionado, chessModeActivado, 0);
+          glColor3f(0, 0, 0);
+          cubo->draw(dibujadoSeleccionado, chessModeActivado, 1);
+        }
+      }
+    break;
+
+    case TETRAEDRO:
+      if(tetraedro!=nullptr){
+        if(modoVisualizacion!=CHESSMODE){
+          tetraedro->draw(dibujadoSeleccionado, chessModeActivado);
+        }
+        else{
+          glColor3f(41, 128, 185);
+          tetraedro->draw(dibujadoSeleccionado, chessModeActivado, 0);
+          glColor3f(0, 0, 0);
+          tetraedro->draw(dibujadoSeleccionado, chessModeActivado, 1);
+        }
+      }
+    break;
+
+  }
+}
+
 void Escena::dibujar()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 	change_observer();
-    ejes.draw();
-    cubo->draw();
-    //tetraedro->draw();
-    // COMPLETAR
-    //   Dibujar los diferentes elementos de la escena
-    // Habrá que tener en esta primera práctica una variable que indique qué objeto se ha de visualizar
-    // y hacer 
-    // cubo.draw()
-    // o
-    // tetraedro.draw()
+  glShadeModel(GL_FLAT);
+
+  confParametrosDibujado();
     
 }
 
@@ -82,6 +148,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
    using namespace std ;
    cout << "Tecla pulsada: '" << tecla << "'" << endl;
    bool salir=false;
+   bool modoIluminacion=false;
    switch( toupper(tecla) )
    {
       case 'Q' :
@@ -90,21 +157,136 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          else {
             salir=true ;
          }
-         break ;
+      break ;
+
       case 'O' :
          // ESTAMOS EN MODO SELECCION DE OBJETO
-         modoMenu=SELOBJETO; 
-         break ;
-        case 'V' :
+        modoMenu=SELOBJETO;
+
+      break ;
+
+      case 'V' :
          // ESTAMOS EN MODO SELECCION DE MODO DE VISUALIZACION
-         modoMenu=SELVISUALIZACION;
-         break ;
-       case 'D' :
+        modoMenu=SELVISUALIZACION;
+      break ;
+
+      case 'D' :
          // ESTAMOS EN MODO SELECCION DE DIBUJADO
-         modoMenu=SELDIBUJADO;
-         break ;
+        modoMenu=SELDIBUJADO;
+      break ;
          // COMPLETAR con los diferentes opciones de teclado
-            
+   
+      case 'C' :
+        if(modoMenu==SELOBJETO){
+          objetoSeleccionado=CUBO;
+        }
+        else{
+          cout << "mal momento para este boton.." << endl;
+        }
+      break;
+
+
+      //SUBMENÚ SELECCION DE OBJETOS
+      case 'T' :
+        if(modoMenu==SELOBJETO){
+          objetoSeleccionado=TETRAEDRO;
+        }
+        else{
+          cout << "mal momento para este boton..." << endl;
+        }
+      break;
+
+      case 'P' :
+        if(modoMenu==SELVISUALIZACION){
+          modoVisualizacion=PUNTOS;
+        }
+        else{
+          cout << "mal momento para este boton..." << endl;
+        }
+      break;
+
+
+      //SUBMENÚ SELECCION VISUALIZACION
+      case 'L' :
+        if(modoMenu==SELVISUALIZACION){
+          modoVisualizacion=LINEAS;
+        }
+        else{
+          cout << "mal momento para este boton..." << endl;
+        }
+      break;
+
+      case 'S' :
+        if(modoMenu==SELVISUALIZACION){
+          modoVisualizacion=SOLIDO;
+        }
+        else{
+          cout << "mal momento para este boton..." << endl;
+        }
+      break;
+
+      case 'A' :
+        if(modoMenu==SELVISUALIZACION){
+          modoVisualizacion=CHESSMODE;
+        }
+        else{
+          cout << "mal momento para este boton..." << endl;
+        }
+      break;
+
+      case 'I' : 
+        if(modoMenu==SELVISUALIZACION){
+          modoVisualizacion=ILUMINACION; 
+        }
+
+
+      //SUBMENÚ SELECCION DIBUJADO
+
+     /* case '0' :
+          if(modoMenu==SELVISUALIZACION && modoVisualizacion==ILUMINACION){
+
+        }
+      break;*/
+
+      case '1' :
+        if(modoMenu==SELVISUALIZACION && modoVisualizacion==ILUMINACION){
+
+        }
+        if(modoMenu==SELDIBUJADO){
+          modoDibujado=INMEDIATO;
+        }
+        else{
+          cout << "mal momento para este boton..." << endl;
+        }
+      break;
+
+      case '2' :
+        if(modoMenu==SELDIBUJADO){
+          modoDibujado=DIFERIDO;
+        }
+        else{
+          cout << "mal momento para este boton..." << endl;
+        }
+      break;
+
+
+      case '3' : 
+        if(modoMenu==SELVISUALIZACION && modoVisualizacion==ILUMINACION){
+
+        }
+      break;
+
+      case '4' : 
+        if(modoMenu==SELVISUALIZACION && modoVisualizacion==ILUMINACION){
+
+        }
+      break;
+
+      case '5' : 
+        if(modoMenu==SELVISUALIZACION && modoVisualizacion==ILUMINACION){
+
+        }
+      break;
    }
    return salir;
 }

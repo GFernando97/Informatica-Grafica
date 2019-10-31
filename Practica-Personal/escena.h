@@ -7,6 +7,11 @@
 #include "tetraedro.h"
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO} menu;
+typedef enum {CUBO, TETRAEDRO} objeto;
+typedef enum {PUNTOS, LINEAS, SOLIDO, CHESSMODE, ILUMINACION} visualizacion;
+typedef enum {INMEDIATO, DIFERIDO} dibujado;
+
+
 class Escena
 {
 
@@ -15,6 +20,8 @@ class Escena
    
 
  // ** PARÁMETROS DE LA CÁMARA (PROVISIONAL)
+       
+  //Variables practica 3
        
        // variables que definen la posicion de la camara en coordenadas polares
    GLfloat Observer_distance;
@@ -33,6 +40,10 @@ class Escena
    void clear_window();
 
    menu modoMenu=NADA;
+   visualizacion modoVisualizacion=SOLIDO;
+   objeto objetoSeleccionado=CUBO;
+   dibujado modoDibujado=INMEDIATO;
+
    // Objetos de la escena
    Ejes ejes;
    Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
@@ -46,6 +57,7 @@ class Escena
 	void redimensionar( int newWidth, int newHeight ) ;
 
 	// Dibujar
+  void confParametrosDibujado();
 	void dibujar() ;
 
 	// Interacción con la escena
