@@ -12,6 +12,7 @@
 
 #include "aux.h"
 
+
 // *****************************************************************************
 //
 // clase para objetos 3D (mallas indexadas)
@@ -27,13 +28,14 @@ class Malla3D
 
    // dibuja el objeto en modo diferido (usando VBOs)
    GLuint CrearVBO(GLuint tipo_vbo, GLuint tamanio_bytes, GLvoid * puntero_ram);
-
    void draw_ModoDiferido();
+
+   void draw_ModoAjedrez(int inicio);
 
    // función que redibuja el objeto
    // está función llama a 'draw_ModoInmediato' (modo inmediato)
    // o bien a 'draw_ModoDiferido' (modo diferido, VBOs)
-   void draw() ;
+   void draw(int modoDibujado, bool chessMode, int inicio=0) ;
 
    protected:
 

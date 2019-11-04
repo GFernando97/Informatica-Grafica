@@ -130,6 +130,7 @@ void Escena::dibujar()
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 	change_observer();
   glShadeModel(GL_FLAT);
+  ejes.draw();
 
   confParametrosDibujado();
     

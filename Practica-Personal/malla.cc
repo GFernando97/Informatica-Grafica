@@ -1,6 +1,7 @@
 #include "aux.h"
 #include "malla.h"
 
+using namespace std;
 // *****************************************************************************
 //
 // Clase Malla3D
@@ -37,6 +38,11 @@ GLuint Malla3D::CrearVBO(GLuint tipo_vbo, GLuint tamanio_bytes, GLvoid * puntero
 
 void Malla3D::draw_ModoDiferido()
 {
+  if(identificadorVBOv == 0)
+    identificadorVBOv = CrearVBO(GL_ARRAY_BUFFER, 3*v.size()*sizeof(float), v.data());
+  if(identificadorVBOf == 0)
+    identificadorVBOf = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, 3*f.size()*sizeof(unsigned), f.data());
+  
    // (la primera vez, se deben crear los VBOs y guardar sus identificadores en el objeto)
    // completar (práctica 1)
 	glBindBuffer(GL_ARRAY_BUFFER, identificadorVBOv);
