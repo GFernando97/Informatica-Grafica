@@ -10,7 +10,7 @@
 
 Escena::Escena()
 {
-    Front_plane       = 50.0;
+    Front_plane       = 50;
     Back_plane        = 2000.0;
     Observer_distance = 4*Front_plane;
     Observer_angle_x  = 0.0 ;
@@ -21,7 +21,8 @@ Escena::Escena()
     // crear los objetos de la escena....
     cubo = new Cubo(); 
     tetraedro = new Tetraedro();  
-
+   // ply = new ObjPly("plys/ant.ply");
+   // cilindro = new Cilindro();
 }
 
 //**************************************************************************
@@ -34,17 +35,15 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
 {
 	glClearColor( 1.0, 1.0, 1.0, 1.0 );// se indica cual sera el color para limpiar la ventana	(r,v,a,al)
 
-	glEnable(GL_CULL_FACE);
+  glEnable(GL_CULL_FACE);
   glEnable( GL_DEPTH_TEST );	// se habilita el z-bufer
 
 	Width  = UI_window_width/10;
 	Height = UI_window_height/10;
 
-   change_projection( float(UI_window_width)/float(UI_window_height) );
+  change_projection( float(UI_window_width)/float(UI_window_height) );
 	glViewport( 0, 0, UI_window_width, UI_window_height );
 }
-
-
 
 // **************************************************************************
 //
@@ -57,27 +56,33 @@ void Escena::confParametrosDibujado(){
   using namespace std;
 
   int dibujadoSeleccionado=1;
-  glPointSize(10);
-  glShadeModel(GL_FLAT);
-
   bool chessModeActivado = false;
+
+  glPointSize(5.0);
+  //glShadeModel(GL_FLAT);
+
   switch(modoVisualizacion){
     case PUNTOS:
-      glColor3f(41, 128, 185);
+      cout << "Seleccionado: PUNTOS\n";
+      glColor3f(0.0, 0.0, 0.0);
       glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
     break;
 
-    case LINEAS:
-      glColor3f(41, 128, 185);
+    case LINEAS:      
+      cout << "Seleccionado: LINEAS\n";
+      glColor3f(128, 128, 128);
       glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     break;
 
     case SOLIDO:
-      glColor3f(41, 128, 185);
+      cout << "Seleccionado: SOLIDO\n";
+      glColor3f(0.333, 0.305, 0.305);
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      glEnableClientState(GL_COLOR_ARRAY);
     break;
 
     case CHESSMODE:
+      cout << "Seleccionado: CHESSMODE\n";
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
       chessModeActivado=true;
   }
@@ -90,38 +95,18 @@ void Escena::confParametrosDibujado(){
     case DIFERIDO:
       dibujadoSeleccionado=0;
     break;
-
   }
 
   switch(objetoSeleccionado){
     case CUBO:
-      if(cubo!=nullptr){
-        if(modoVisualizacion!=CHESSMODE){
-          cubo->draw(dibujadoSeleccionado, chessModeActivado);
-        }
-        else{
-          glColor3f(41, 128, 185);
-          cubo->draw(dibujadoSeleccionado, chessModeActivado, 0);
-          glColor3f(0, 0, 0);
-          cubo->draw(dibujadoSeleccionado, chessModeActivado, 1);
-        }
-      }
+      if(cubo != nullptr)
+        cubo->draw(dibujadoSeleccionado, chessModeActivado);
     break;
 
     case TETRAEDRO:
-      if(tetraedro!=nullptr){
-        if(modoVisualizacion!=CHESSMODE){
-          tetraedro->draw(dibujadoSeleccionado, chessModeActivado);
-        }
-        else{
-          glColor3f(41, 128, 185);
-          tetraedro->draw(dibujadoSeleccionado, chessModeActivado, 0);
-          glColor3f(0, 0, 0);
-          tetraedro->draw(dibujadoSeleccionado, chessModeActivado, 1);
-        }
-      }
+      if(tetraedro!=nullptr)
+        tetraedro->draw(dibujadoSeleccionado, chessModeActivado);
     break;
-
   }
 }
 
@@ -129,9 +114,8 @@ void Escena::dibujar()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 	change_observer();
-  glShadeModel(GL_FLAT);
   ejes.draw();
-
+  glEnable(GL_CULL_FACE);
   confParametrosDibujado();
     
 }

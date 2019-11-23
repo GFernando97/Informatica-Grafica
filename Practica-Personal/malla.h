@@ -30,22 +30,22 @@ class Malla3D
    GLuint CrearVBO(GLuint tipo_vbo, GLuint tamanio_bytes, GLvoid * puntero_ram);
    void draw_ModoDiferido();
 
-   void draw_ModoAjedrez(int inicio);
+   void draw_ModoAjedrez();
 
    // función que redibuja el objeto
    // está función llama a 'draw_ModoInmediato' (modo inmediato)
    // o bien a 'draw_ModoDiferido' (modo diferido, VBOs)
-   void draw(int modoDibujado, bool chessMode, int inicio=0) ;
+   void draw(int modoDibujado, bool chessMode) ;
 
-   protected:
+   protected: 
 
    void calcular_normales() ; // calcula tabla de normales de vértices (práctica 3)
 
    std::vector<Tupla3f> v ;   // tabla de coordenadas de vértices (una tupla por vértice, con tres floats)
    std::vector<Tupla3i> f ; // una terna de 3 enteros por cada cara o triángulo
 
-   GLuint identificadorVBOv;
-   GLuint identificadorVBOf;
+   GLuint identificadorVBOv = 0;
+   GLuint identificadorVBOf = 0;
    // completar: tabla de colores, tabla de normales de vértices
 } ;
 

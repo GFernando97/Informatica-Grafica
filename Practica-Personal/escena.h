@@ -47,7 +47,13 @@ class Escena
    // Objetos de la escena
    Ejes ejes;
    Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
-   Tetraedro * tetraedro= nullptr ; // es importante inicializarlo a 'nullptr'
+   Tetraedro * tetraedro= nullptr ; // es importante inicializarlo a 'nulunlptr'
+
+  // ObjPLY * ply = nullptr;
+  // objRevolucion * objRev = nullptr;
+  // Cilindro * cilindro = nullptr;
+  // Cono * cono = nullptr;
+  // Esfera * esfera = nullptr;
 
    
    public:

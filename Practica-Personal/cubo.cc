@@ -7,8 +7,7 @@ Cubo::Cubo(float lado)
 
 
    // inicializar la tabla de vértices
-	v.resize(8);
-	v = { {-lado, -lado, -lado},
+	v = {   {-lado, -lado, -lado},
           {-lado, -lado, +lado},
           {-lado, +lado, -lado}, 
           {-lado, +lado, +lado},
@@ -19,7 +18,6 @@ Cubo::Cubo(float lado)
    // inicializar la tabla de caras o triángulos:
    // (es importante en cada cara ordenar los vértices en sentido contrario
    //  de las agujas del reloj, cuando esa cara se observa desde el exterior del cubo)
-    f.resize(12);
     f = { { 0, 2, 4 }, { 4, 2, 6 },
           { 1, 5, 3 }, { 3, 5, 7 },
           { 1, 3, 0 }, { 0, 3, 2 },

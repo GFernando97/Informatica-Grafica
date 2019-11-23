@@ -15,16 +15,14 @@ void Malla3D::draw_ModoInmediato()
   // visualizar la malla usando glDrawElements,
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, v.data());
-
 	glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, f.data());
 	glDisableClientState(GL_VERTEX_ARRAY);
-
-  
 }
 // -----------------------------------------------------------------------------
 // Visualización en modo diferido con 'glDrawElements' (usando VBOs)
 
-GLuint Malla3D::CrearVBO(GLuint tipo_vbo, GLuint tamanio_bytes, GLvoid * puntero_ram){
+GLuint Malla3D::CrearVBO(GLuint tipo_vbo, GLuint tamanio_bytes, GLvoid * puntero_ram)
+{
 	GLuint id_vbo;
 
 	glGenBuffers(1, &id_vbo);
@@ -48,45 +46,54 @@ void Malla3D::draw_ModoDiferido()
 	glBindBuffer(GL_ARRAY_BUFFER, identificadorVBOv);
 	glVertexPointer(3, GL_FLOAT, 0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glEnableClientState(GL_VERTEX_ARRAY);
 
+	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, identificadorVBOf);
 	glDrawElements(GL_TRIANGLES, 3*f.size(),GL_UNSIGNED_INT, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 // -----------------------------------------------------------------------------
 // Visualización en modo Ajedrez
 
-void Malla3D::draw_ModoAjedrez(int inicio){
-	std::vector<Tupla3i> chessF;
+void Malla3D::draw_ModoAjedrez()
+{
+	std::vector<Tupla3i> chessPairsFaces;
+	std::vector<Tupla3i> chessOddsFaces;
 
-  	for (int i = inicio; i < f.size(); i += 2)
-    	chessF.push_back(f[i]);
+  	for (int i = 1; i < f.size(); i+=2){
+    		chessPairsFaces.push_back(f[i-1]);
+    		chessOddsFaces.push_back(f[i]);
+  	}
+
+  
 
   	glEnableClientState(GL_VERTEX_ARRAY);
-  	glVertexPointer(3, GL_FLOAT, 3, v.data());
-  	glDrawElements(GL_TRIANGLES, chessF.size()*3, GL_UNSIGNED_INT, chessF.data());
-  	glDisableClientState(GL_VERTEX_ARRAY);
 
+  	glVertexPointer(3, GL_FLOAT, 0, v.data());
+	glColor3f(1, 0.682, 0.019);
+	glDrawElements(GL_TRIANGLES, chessPairsFaces.size()*3, GL_UNSIGNED_INT, chessPairsFaces.data());
+	glColor3f(0.0, 0.0, 1.0);
+	glDrawElements(GL_TRIANGLES, chessOddsFaces.size()*3, GL_UNSIGNED_INT, chessOddsFaces.data());
+  	
+  	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 //-----------------------------------------------------------------------------
 // Función de visualización de la malla,
 // puede llamar a  draw_ModoInmediato o bien a draw_ModoDiferido
 
-void Malla3D::draw(int modoDibujado, bool chessMode, int inicio)
+void Malla3D::draw(int modoDibujado, bool chessMode)
 {
-	if(chessMode==false){
-		if(modoDibujado==1){
-			draw_ModoInmediato();
-		}
-		else draw_ModoDiferido();
+	if(chessMode){
+		draw_ModoAjedrez();
 	}
-	
-
-	else draw_ModoAjedrez(inicio);
+	else{
+		if(modoDibujado==0)
+			draw_ModoDiferido();
+		else if(modoDibujado==1)
+			draw_ModoInmediato();
+	}
 }
 
 //-----------------------------------------------------------------------------
