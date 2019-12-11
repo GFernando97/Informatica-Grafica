@@ -3,8 +3,6 @@
 #include "ply_reader.h"
 
 
-
-
 // *****************************************************************************
 //
 // Clase ObjRevolucion (práctica 2)
@@ -15,58 +13,82 @@
 // *****************************************************************************
 // objeto de revolución obtenido a partir de un perfil (en un PLY)
 
-ObjRevolucion::ObjRevolucion(const std::string &nombreArchivo) {
-	std::vector<Tupla3f> perfil;
-	const int N = 20;
 
+ObjRevolucion::ObjRevolucion(const std::string &nombreArchivo, int num_instancias, bool tapa_sup, bool tapa_inf) 
+{
+	std::vector<Tupla3f> perfil;
 	ply::read_vertices(nombreArchivo, perfil);
+	crearMalla(perfil, num_instancias, tapa_sup, tapa_inf);
 }
 
  
-ObjRevolucion::ObjRevolucion(std::vector<Tupla3f> archivo, int num_instancias, bool tapa_sup, bool tapa_inf) {
-    
+ObjRevolucion::ObjRevolucion(std::vector<Tupla3f> archivo, int num_instancias, bool tapa_sup, bool tapa_inf)
+{
+	crearMalla(archivo, num_instancias, tapa_sup, tapa_inf );
 }
 
-void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, const int num_instancias_perf, const bool conTapas) {
+void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, const int num_instancias_perf, const bool tapa_sup, const bool tapa_inf) 
+{
 	Tupla3f vAux;
-	const float parte = (2*M_PI) /num_instancias_perf;
+	Tupla3i fAux;
 	const int M = perfil_original.size();
-	int a, b;
+	const int N = num_instancias_perf;
+	int valA, valB,valC;
 
-	for (int i = 0; i < num_instancias_perf; i++){
-		for (int j = 0; j < M; j++){
-			vAux(X) = perfil_original[j](X) * cos(parte *i);
+	//Calculamos los vertices 
+
+	for(int i= 0; i< N; i++){
+		for(int j = 0; j < M; j++){
+			vAux(X) = perfil_original[j](X) * cos(((2*M_PI)/N)*i);
 			vAux(Y) = perfil_original[j](Y);
-			vAux(Z) = perfil_original[j](Z) * sin(parte *i);
+			vAux(Z) = perfil_original[j](X) * sin(((2*M_PI)/N)*i);
 
 			v.push_back(vAux);
 		}
 	}
 
+	//calculamos las caras
+	for(int i = 0; i < N; i++){
+		for(int j = 0; j < M-1; j++){
+			valA = M*i+j;
+			valB = M*((i+1)%N)+j;
 
-	for (int i = 0;  i  < num_instancias_perf; i++){
-		for (int j = 0; j < M; j++){
-			a = M*i+j;
-			b = M*((i+1) % num_instancias_perf) + j;
-
-			f.push_back(Tupla3i(b, a, b+1));
-			f.push_back(Tupla3i(b+1, a, a+1));
+			f.push_back({valB, valA, valB+1});
+			f.push_back({valB+1, valA, valA+1});
 		}
 	}
 
-	if(conTapas){
+	//Si el booleano tapa_sup es true, calculamos la tapa superior
+	if(tapa_sup){
+		vAux(X) = 0.0;
+		vAux(Y) = v[0](Y);
+		vAux(Z) = 0.0;
+		v.push_back(vAux);
 
-		v.push_back(Tupla3f(0.0, v[0](Y), 0.0));
 
-		for(int i = 0; i < num_instancias_perf; i++){
-			f.push_back(Tupla3i(M*i, M*((i+1)% num_instancias_perf), num_instancias_perf*M));
+		for(int i= 0; i <N; i++){
+			valA = M*i;			
+			valB = M*((i+1)%N);
+			valC = N*M;
+
+
+			f.push_back({valA, valB, valC});
 		}
+	}
 
-		v.push_back(Tupla3f(0.0, v[perfil_original.size()-1](Y), 0.0));
+	if(tapa_inf){
+		vAux(X) = 0.0;
+		vAux(Y) = v[perfil_original.size()-1](Y);
+		vAux(Z) = 0.0;
 
-		for(int i = 0; i < num_instancias_perf; i++){
-			f.push_back(Tupla3i(num_instancias_perf*M+1, M+M*((i+1)%num_instancias_perf)-1, M*(i+1)-1));
+		v.push_back(vAux);
+
+		for(int i = 0; i < N; i++){
+			valA = (N*M+1);
+			valB = M + M*((i+1)%N)-1;
+			valC = M*(i+1)-1;
+
+			f.push_back({valA, valB, valC});
 		}
-
 	}
 }

@@ -25,12 +25,12 @@
 class ObjRevolucion : public Malla3D
 {
    public:
-   ObjRevolucion();
-   ObjRevolucion(const std::string &nombreArchivo);
+   ObjRevolucion(){};
+   ObjRevolucion(const std::string &nombreArchivo, int num_instancias, bool tapa_sup = true, bool tapa_inf = true);
    ObjRevolucion(std::vector<Tupla3f> archivo, int num_instancias, bool tapa_sup=true, bool tapa_inf=true) ;
-private:
+protected:
 
-   void crearMalla(const std::vector<Tupla3f> & perfil_original, const int num_instancias_perf, const bool conTapas);
+   void crearMalla(const std::vector<Tupla3f> & perfil_original, const int num_instancias_perf, bool tapa_sup, bool tapa_inf);
 
 };
 

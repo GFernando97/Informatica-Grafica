@@ -5,9 +5,14 @@
 #include "malla.h"
 #include "cubo.h"
 #include "tetraedro.h"
+#include "esfera.h"
+#include "cono.h"
+#include "cilindro.h"
+#include "objrevolucion.h"
+#include "objply.h"
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO} menu;
-typedef enum {CUBO, TETRAEDRO} objeto;
+typedef enum {CUBO, TETRAEDRO, ESFERA, CILINDRO, CONO} objeto;
 typedef enum {PUNTOS, LINEAS, SOLIDO, CHESSMODE, ILUMINACION} visualizacion;
 typedef enum {INMEDIATO, DIFERIDO} dibujado;
 
@@ -17,13 +22,6 @@ class Escena
 
    private:
 
-   
-
- // ** PARÁMETROS DE LA CÁMARA (PROVISIONAL)
-       
-  //Variables practica 3
-       
-       // variables que definen la posicion de la camara en coordenadas polares
    GLfloat Observer_distance;
    GLfloat Observer_angle_x;
    GLfloat Observer_angle_y;
@@ -45,20 +43,19 @@ class Escena
    dibujado modoDibujado=INMEDIATO;
 
    // Objetos de la escena
-   Ejes ejes;
-   Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
-   Tetraedro * tetraedro= nullptr ; // es importante inicializarlo a 'nulunlptr'
-
-  // ObjPLY * ply = nullptr;
-  // objRevolucion * objRev = nullptr;
-  // Cilindro * cilindro = nullptr;
-  // Cono * cono = nullptr;
-  // Esfera * esfera = nullptr;
+  Ejes ejes;
+  Cubo * cubo = nullptr ; 
+  Tetraedro * tetraedro= nullptr ; 
+  ObjRevolucion * objRev = nullptr;
+  ObjPLY * objply = nullptr;
+  Cilindro * cilindro = nullptr;
+  Cono * cono = nullptr;
+  Esfera * esfera = nullptr;
 
    
    public:
 
-    Escena();
+  Escena();
 	void inicializar( int UI_window_width, int UI_window_height );
 	void redimensionar( int newWidth, int newHeight ) ;
 

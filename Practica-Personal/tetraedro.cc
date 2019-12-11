@@ -6,16 +6,20 @@
 
 Tetraedro::Tetraedro()
 {
-	const float lado = 120.0;
+	const float lado = 30.0;
 
-   v={  {-lado/2.0, 0.0, -lado/(2.0 * sqrt(3.0))},  // 0
-        { lado/2.0, 0.0, -lado/(2.0 * sqrt(3.0))},  // 1
-        { 0.0, 0.0, lado/sqrt(3.0)},  // 2
-        { 0.0, sqrt((2 * lado * lado)/3), 0.0}};
+   v={  {-lado, -lado,  lado},  // 0
+        { lado, -lado,  lado},  // 1
+        { 0.0,   lado, 	0.0},  // 2
+        { 0.0,  -lado, -lado}};
    
-   f={  {3, 2, 1}, {3, 1, 0},
-        {3, 0, 2}, {2, 1, 0}};	  
+   f={  {0, 1, 2}, {2, 1, 3},
+        {3, 0, 2}, {0, 3, 1}};	  
   
+
+  	for(int i = 0; i < v.size(); i++){
+    	c.push_back({0.0, 0.0, 0.0}); 
+  	}
    // (es importante en cada cara ordenar los vértices en sentido contrario
    //  de las agujas del reloj, cuando esa cara se observa desde el exterior del cubo)
 }

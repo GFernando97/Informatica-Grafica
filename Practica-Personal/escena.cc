@@ -21,8 +21,10 @@ Escena::Escena()
     // crear los objetos de la escena....
     cubo = new Cubo(); 
     tetraedro = new Tetraedro();  
-   // ply = new ObjPly("plys/ant.ply");
-   // cilindro = new Cilindro();
+    objply = new ObjPLY("plys/ant.ply");
+    cilindro = new Cilindro();
+    cono = new Cono();
+    esfera = new Esfera();
 }
 
 //**************************************************************************
@@ -34,15 +36,8 @@ Escena::Escena()
 void Escena::inicializar( int UI_window_width, int UI_window_height )
 {
 	glClearColor( 1.0, 1.0, 1.0, 1.0 );// se indica cual sera el color para limpiar la ventana	(r,v,a,al)
-
-  glEnable(GL_CULL_FACE);
   glEnable( GL_DEPTH_TEST );	// se habilita el z-bufer
-
-	Width  = UI_window_width/10;
-	Height = UI_window_height/10;
-
-  change_projection( float(UI_window_width)/float(UI_window_height) );
-	glViewport( 0, 0, UI_window_width, UI_window_height );
+  redimensionar(UI_window_width, UI_window_height);
 }
 
 // **************************************************************************
@@ -57,34 +52,30 @@ void Escena::confParametrosDibujado(){
 
   int dibujadoSeleccionado=1;
   bool chessModeActivado = false;
-
   glPointSize(5.0);
-  //glShadeModel(GL_FLAT);
+  glShadeModel(GL_FLAT);
 
   switch(modoVisualizacion){
     case PUNTOS:
-      cout << "Seleccionado: PUNTOS\n";
-      glColor3f(0.0, 0.0, 0.0);
       glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
     break;
 
     case LINEAS:      
-      cout << "Seleccionado: LINEAS\n";
-      glColor3f(128, 128, 128);
-      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+      glPolygonMode(GL_FRONT, GL_LINE);
     break;
 
     case SOLIDO:
-      cout << "Seleccionado: SOLIDO\n";
-      glColor3f(0.333, 0.305, 0.305);
-      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-      glEnableClientState(GL_COLOR_ARRAY);
+      glPolygonMode(GL_FRONT, GL_FILL);
     break;
 
     case CHESSMODE:
-      cout << "Seleccionado: CHESSMODE\n";
-      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      glPolygonMode(GL_FRONT, GL_FILL);
       chessModeActivado=true;
+    break;
+
+    default:
+      cout << "modo: " << modoVisualizacion << endl;
+    break;
   }
 
   switch (modoDibujado){
@@ -116,7 +107,46 @@ void Escena::dibujar()
 	change_observer();
   ejes.draw();
   glEnable(GL_CULL_FACE);
-  confParametrosDibujado();
+ // confParametrosDibujado();
+
+
+
+  //Dibujar sin ningun parametro, directamente en pantalla
+  glPushMatrix();
+  glTranslatef(50,50,50);
+  if(cubo != nullptr)
+    cubo->draw(1, false);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(-50, -50, -50);
+  if(tetraedro != nullptr)
+    tetraedro->draw(1, false);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(50, -50, 50);
+  if(cilindro != nullptr)
+    cilindro->draw(1, true);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(-50, 50 , 50);
+  if(cono != nullptr)
+    cono->draw(1, true);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(-100, 50, 50);
+  if(esfera != nullptr)
+    esfera->draw(1, true);
+  glPopMatrix();
+
+  glPushMatrix();
+  if(objply != nullptr)
+    objply->draw(1, false);
+  glPopMatrix();
+
     
 }
 
@@ -300,8 +330,7 @@ void Escena::teclaEspecial( int Tecla1, int x, int y )
          Observer_distance /= 1.2 ;
          break;
 	}
-
-	//std::cout << Observer_distance << std::endl;
+//std::cout << Observer_distance << std::endl;
 }
 
 //**************************************************************************
