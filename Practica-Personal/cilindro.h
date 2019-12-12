@@ -10,7 +10,7 @@ class Cilindro : public ObjRevolucion
 	float altura ;
 	float radio ;*/
 public:
-Cilindro(const int  num_vert_perfil=2, const int num_instancias_perf=20, const float altura=40.0, const float radio=30.0);
+Cilindro(const int  num_vert_perfil=2, const int num_instancias_perf=20, const float altura=40.0, const float radio=10.0);
 };
 
 #endif

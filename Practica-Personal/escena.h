@@ -11,8 +11,8 @@
 #include "objrevolucion.h"
 #include "objply.h"
 
-typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO} menu;
-typedef enum {CUBO, TETRAEDRO, ESFERA, CILINDRO, CONO} objeto;
+typedef enum {NADA, SELOBJETO, SELVISUALIZACION, SELDIBUJADO} menu;
+typedef enum {CUBO, TETRAEDRO, ESFERA, CILINDRO, CONO, PLY} objeto;
 typedef enum {PUNTOS, LINEAS, SOLIDO, CHESSMODE, ILUMINACION} visualizacion;
 typedef enum {INMEDIATO, DIFERIDO} dibujado;
 

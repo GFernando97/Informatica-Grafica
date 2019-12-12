@@ -115,12 +115,59 @@ void Malla3D::draw(int modoDibujado, bool chessMode)
 
 //-----------------------------------------------------------------------------
 // Función de calcular normales
-void Malla3D::calcular_normales(){
+void Malla3D::calcular_normales()
+{
+	vector<Tupla3f> NVertex;
+	Tupla3f vAux1, vAux2, vAux3;
 
-	glEnable(GL_NORMALIZE);
+	vector<int> mod;
+
 
 	for(int i = 0; i < v.size(); i++){
+		nVertex.push_back({0.0, 0.0, 0.0});
+	}
+
+	for(int i= 0; i < f.size(); i++){
+		vAux1 = v[f[i](X)];
+		vAux2 = v[f[i](Y)];
+		vAux3 = v[f[i](X)];
+
+		Tupla3f dir1, dir2;
+
+		dir1 = { {vAux2(X)-vAux1(X)}, 
+				 {vAux2(Y)-vAux1(Y)},
+				 {vAux2(Z)-vAux1(Z)}
+				};
+
+		dir2 = { {vAux3(X)-vAux1(X)},
+				 {vAux3(Y)-vAux1(Y)},
+				 {vAux3(Z)-vAux1(Z)}
+				};
+
+		Tupla3f producto_vect;
+
+		producto_vect(X) = dir1(Y)*dir2(Z) - dir1(Z)*dir2(Y);
+		producto_vect(Y) = dir1(Z)*dir2(X) - dir1(X)*dir2(Z);
+		producto_vect(Z) = dir1(X)*dir2(Y) - dir1(Y)*dir2(X);
+
+		float mod = sqrt(producto_vect(X)*producto_vect(X) + 
+						 producto_vect(Y)*producto_vect(Y) + 
+						 producto_vect(Z)*producto_vect(Z));
+
+		nFaces.push_back({producto_vect(X)/mod, producto_vect(Y)/mod, producto_vect(Z)/mod});
 		
+
+	 	nVertex[f[i](X)](X) += nFaces[i](X);
+	    nVertex[f[i](X)](Y) += nFaces[i](Y);
+	    nVertex[f[i](X)](Z) += nFaces[i](Z);
+
+	    nVertex[f[i](Y)](X) += nFaces[i](X);
+	    nVertex[f[i](Y)](Y) += nFaces[i](Y);
+	    nVertex[f[i](Y)](Z) += nFaces[i](Z);
+
+	    nVertex[f[i](Z)](X) += nFaces[i](X);
+	    nVertex[f[i](Z)](Y) += nFaces[i](Y);
+	    nVertex[f[i](Z)](Z) += nFaces[i](Z);
 	}
 }
 

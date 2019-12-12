@@ -21,7 +21,7 @@ Escena::Escena()
     // crear los objetos de la escena....
     cubo = new Cubo(); 
     tetraedro = new Tetraedro();  
-    objply = new ObjPLY("plys/ant.ply");
+    objply = new ObjPLY("plys/big_dodge.ply");
     cilindro = new Cilindro();
     cono = new Cono();
     esfera = new Esfera();
@@ -57,10 +57,12 @@ void Escena::confParametrosDibujado(){
 
   switch(modoVisualizacion){
     case PUNTOS:
+      glDisable(GL_CULL_FACE);
       glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
     break;
 
-    case LINEAS:      
+    case LINEAS:  
+      glDisable(GL_CULL_FACE);    
       glPolygonMode(GL_FRONT, GL_LINE);
     break;
 
@@ -88,17 +90,44 @@ void Escena::confParametrosDibujado(){
     break;
   }
 
-  switch(objetoSeleccionado){
-    case CUBO:
-      if(cubo != nullptr)
-        cubo->draw(dibujadoSeleccionado, chessModeActivado);
-    break;
+  //Ahora se van a dibujar objetos simultaneos
+  glPushMatrix();
+  glTranslatef(50,50,50);
+  if(cubo != nullptr)
+    cubo->draw(, false);
+  glPopMatrix();
 
-    case TETRAEDRO:
-      if(tetraedro!=nullptr)
-        tetraedro->draw(dibujadoSeleccionado, chessModeActivado);
-    break;
-  }
+  glPushMatrix();
+  glTranslatef(-50, -50, -50);
+  if(tetraedro != nullptr)
+    tetraedro->draw(2, false);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(50, -50, 50);
+  if(cilindro != nullptr)
+    cilindro->draw(2, true);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(-50, 50 , 50);
+  if(cono != nullptr)
+    cono->draw(2, true);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(-100, 50, 50);
+  if(esfera != nullptr)
+    esfera->draw(2, true);
+  glPopMatrix();
+
+  glPushMatrix();
+  glScalef(8.0, 8.0, 8.0);
+  if(objply != nullptr)
+    objply->draw(2, true);
+  glPopMatrix();
+
+
 }
 
 void Escena::dibujar()
@@ -107,46 +136,13 @@ void Escena::dibujar()
 	change_observer();
   ejes.draw();
   glEnable(GL_CULL_FACE);
- // confParametrosDibujado();
+
+  confParametrosDibujado();
 
 
 
   //Dibujar sin ningun parametro, directamente en pantalla
-  glPushMatrix();
-  glTranslatef(50,50,50);
-  if(cubo != nullptr)
-    cubo->draw(1, false);
-  glPopMatrix();
-
-  glPushMatrix();
-  glTranslatef(-50, -50, -50);
-  if(tetraedro != nullptr)
-    tetraedro->draw(1, false);
-  glPopMatrix();
-
-  glPushMatrix();
-  glTranslatef(50, -50, 50);
-  if(cilindro != nullptr)
-    cilindro->draw(1, true);
-  glPopMatrix();
-
-  glPushMatrix();
-  glTranslatef(-50, 50 , 50);
-  if(cono != nullptr)
-    cono->draw(1, true);
-  glPopMatrix();
-
-  glPushMatrix();
-  glTranslatef(-100, 50, 50);
-  if(esfera != nullptr)
-    esfera->draw(1, true);
-  glPopMatrix();
-
-  glPushMatrix();
-  if(objply != nullptr)
-    objply->draw(1, false);
-  glPopMatrix();
-
+  
     
 }
 
