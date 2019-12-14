@@ -10,6 +10,9 @@
 #include "cilindro.h"
 #include "objrevolucion.h"
 #include "objply.h"
+#include "luzdireccional.h"
+//#include "luzposicional.h"
+#include "luz.h"
 
 typedef enum {NADA, SELOBJETO, SELVISUALIZACION, SELDIBUJADO} menu;
 typedef enum {CUBO, TETRAEDRO, ESFERA, CILINDRO, CONO, PLY} objeto;
@@ -43,6 +46,7 @@ class Escena
    dibujado modoDibujado=INMEDIATO;
 
    // Objetos de la escena
+  LuzDireccional * directionalLight = nullptr;
   Ejes ejes;
   Cubo * cubo = nullptr ; 
   Tetraedro * tetraedro= nullptr ; 

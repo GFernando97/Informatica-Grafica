@@ -13,16 +13,29 @@ using namespace std;
 void Malla3D::draw_ModoInmediato()
 {
   // visualizar la malla usando glDrawElements,
-	//glDisable(GL_CULL_FACE);
-	glEnableClientState(GL_VERTEX_ARRAY);
+/*	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, v.data());
 	glShadeModel(GL_FLAT);
-	glColorPointer(3, GL_FLOAT, 0, c.data());
+	glColorPointer(3, GL_FLOAT, 0, immediateColor.data());
+
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDrawElements(GL_TRIANGLES, 3*f.size(), GL_UNSIGNED_INT, f.data());
 	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
+*/
+	//Con Material
+	material.aplicar();
+	if(nVertex.size()==0)
+		calcular_normales();
+	glEnable(GL_NORMALIZE);
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, v.data());
+	glNormalPointer(GL_FLOAT, 0, nVertex.data());
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, f.data());
+	glDisableClientState(GL_NORMAL_ARRAY);
 }
 // -----------------------------------------------------------------------------
 // Visualización en modo diferido con 'glDrawElements' (usando VBOs)
@@ -45,20 +58,27 @@ void Malla3D::draw_ModoDiferido()
   if(identificadorVBOf == 0)
     identificadorVBOf = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, 3*f.size()*sizeof(unsigned), f.data());
   if(identificadorVBOc == 0)
-    identificadorVBOc = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, 3*c.size()*sizeof(unsigned), c.data());
+    identificadorVBOc = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, 3*deferredColor.size()*sizeof(unsigned), deferredColor.data());
    // (la primera vez, se deben crear los VBOs y guardar sus identificadores en el objeto)
    // completar (práctica 1)
 	glBindBuffer(GL_ARRAY_BUFFER, identificadorVBOv);
 	glVertexPointer(3, GL_FLOAT, 0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glEnableClientState(GL_VERTEX_ARRAY);
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, identificadorVBOf);
+
 	glBindBuffer(GL_ARRAY_BUFFER, identificadorVBOc);
-	glColorPointer(3, GL_FLOAT,0,0 );	
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glColorPointer(3, GL_FLOAT, 0, 0);	
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glEnableClientState(GL_COLOR_ARRAY);
+	glShadeModel(GL_FLAT);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDrawElements(GL_TRIANGLES, 3*f.size(),GL_UNSIGNED_INT, 0);
+
 	glDisableClientState(GL_COLOR_ARRAY);
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
@@ -69,20 +89,12 @@ void Malla3D::draw_ModoAjedrez()
 {
 	std::vector<Tupla3i> chessPairsFaces;
 	std::vector<Tupla3i> chessOddsFaces;
-	std::vector<Tupla3f> oddColor;
-	std::vector<Tupla3f> pairColor;
-
   	for (int i = 0; i < f.size(); i+=2){
     		chessPairsFaces.push_back(f[i]);
     		chessOddsFaces.push_back(f[i+1]);
   	}
 
-  	for(int i = 0; i < v.size(); i++){
-  		oddColor.push_back({0.060, 0.110,0.113});
-  		pairColor.push_back({0.53, 0.53, 0.53});
-  	}
-  
-
+ 
   	glEnableClientState(GL_VERTEX_ARRAY);
   	glEnableClientState(GL_COLOR_ARRAY);
 
@@ -154,7 +166,7 @@ void Malla3D::calcular_normales()
 						 producto_vect(Y)*producto_vect(Y) + 
 						 producto_vect(Z)*producto_vect(Z));
 
-		nFaces.push_back({producto_vect(X)/mod, producto_vect(Y)/mod, producto_vect(Z)/mod});
+		nFaces.push_back({(int)producto_vect(X)/mod, (int)producto_vect(Y)/mod, (int)producto_vect(Z)/mod});
 		
 
 	 	nVertex[f[i](X)](X) += nFaces[i](X);
@@ -172,4 +184,26 @@ void Malla3D::calcular_normales()
 }
 
 
+//Funciones auxiliares para seleccion de colores para las caras(triangulos)
+void Malla3D::immediateColorPicker(const float R, const float G, const float B)
+{
+	for(int i = 0; i < v.size(); i++){
+		immediateColor.push_back({R,G,B});
+	}
+}
+
+void Malla3D::deferredColorPicker(const float R, const float G, const float B)
+{
+	for(int i=0; i < v.size(); i++){
+		deferredColor.push_back({R,G,B});
+	}
+}
+
+void Malla3D::chessColorPicker(const Tupla3f Color1, const Tupla3f Color2)
+{
+		for(int i = 0; i < v.size(); i++){
+  		oddColor.push_back(Color1);
+  		pairColor.push_back(Color2);
+  	}
+}
 

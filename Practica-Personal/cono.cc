@@ -13,7 +13,8 @@ Cono::Cono(const int num_vert_perfil, const int num_instancias_perf, const float
 	perfil_original.push_back({0.0, altura, 0.0});
 
 	crearMalla(perfil_original, num_instancias_perf, false, true);
-	for(int i = 0; i< v.size(); i++){
-		c.push_back({0.53, 0.53, 0.53});
-	}
+
+	immediateColorPicker();
+	deferredColorPicker();
+	chessColorPicker();
 }

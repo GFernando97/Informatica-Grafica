@@ -20,6 +20,10 @@ Esfera::Esfera(const int num_vert_perfil, const int num_instancias_perf, const f
 
 	crearMalla(perfil_original, num_instancias_perf, true, true);
 
+	immediateColorPicker();
+	deferredColorPicker();
+	chessColorPicker();
+
 
 }
 

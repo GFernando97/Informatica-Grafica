@@ -19,9 +19,12 @@ Escena::Escena()
     ejes.changeAxisSize( 5000 );
 
     // crear los objetos de la escena....
+    Material m({0.0215,0.1745,0.0215,1.0},{0.07568,0.61424,0.07568,1.0},{0.633,0.727811,0.633,1.0},76.8);
+    directionalLight = new LuzDireccional({100.0, 100.0}, GL_LIGHT1, {0.0,0.0,0.0,1.0},{1.0,1.0,1.0,1.0}, {1.0,1.0,1.0,1.0});
     cubo = new Cubo(); 
+    cubo->setMaterial(m);
     tetraedro = new Tetraedro();  
-    objply = new ObjPLY("plys/big_dodge.ply");
+    objply = new ObjPLY("plys/Deer.ply");
     cilindro = new Cilindro();
     cono = new Cono();
     esfera = new Esfera();
@@ -89,7 +92,7 @@ void Escena::confParametrosDibujado(){
       dibujadoSeleccionado=0;
     break;
   }
-
+/*
   //Ahora se van a dibujar objetos simultaneos
   glPushMatrix();
   glTranslatef(50,50,50);
@@ -126,6 +129,7 @@ void Escena::confParametrosDibujado(){
   if(objply != nullptr)
     objply->draw(2, true);
   glPopMatrix();
+  */
 
 
 }
@@ -134,14 +138,56 @@ void Escena::dibujar()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 	change_observer();
+ // glEnable(GL_LIGHTING);
   ejes.draw();
   glEnable(GL_CULL_FACE);
 
-  confParametrosDibujado();
+/*
 
+ // confParametrosDibujado();
 
-
+  directionalLight->activar();
+  glShadeModel(GL_SMOOTH);
   //Dibujar sin ningun parametro, directamente en pantalla
+    //Ahora se van a dibujar objetos simultaneos
+
+  glPushMatrix();
+  //glTranslatef(50,50,50);
+  if(cubo != nullptr)
+    cubo->draw(0, false);
+  glPopMatrix();
+*//*
+  glPushMatrix();
+  glTranslatef(-50, -50, -50);
+  if(tetraedro != nullptr)
+    tetraedro->draw(0, false);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(50, -50, 50);
+  if(cilindro != nullptr)
+    cilindro->draw(1, false);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(-50, 50 , 50);
+  if(cono != nullptr)
+    cono->draw(1, false);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(-100, 50, 50);
+  if(esfera != nullptr)
+    esfera->draw(1, false);
+  glPopMatrix();
+
+  */
+  glPushMatrix();
+  glScalef(0.2, 0.2, 0.2);
+  if(objply != nullptr)
+    objply->draw(1, true);
+  glPopMatrix();
+
   
     
 }
@@ -207,6 +253,15 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
         }
       break;
 
+      case 'C':
+        if(modoMenu==SELOBJETO){
+          objetoSeleccionado=CUBO; 
+        }
+
+
+
+      //SUBMENÚ SELECCION VISUALIZACION
+
       case 'P' :
         if(modoMenu==SELVISUALIZACION){
           modoVisualizacion=PUNTOS;
@@ -217,7 +272,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       break;
 
 
-      //SUBMENÚ SELECCION VISUALIZACION
       case 'L' :
         if(modoMenu==SELVISUALIZACION){
           modoVisualizacion=LINEAS;
@@ -251,53 +305,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
         }
 
 
-      //SUBMENÚ SELECCION DIBUJADO
-
-     /* case '0' :
-          if(modoMenu==SELVISUALIZACION && modoVisualizacion==ILUMINACION){
-
-        }
-      break;*/
-
-      case '1' :
-        if(modoMenu==SELVISUALIZACION && modoVisualizacion==ILUMINACION){
-
-        }
-        if(modoMenu==SELDIBUJADO){
-          modoDibujado=INMEDIATO;
-        }
-        else{
-          cout << "mal momento para este boton..." << endl;
-        }
-      break;
-
-      case '2' :
-        if(modoMenu==SELDIBUJADO){
-          modoDibujado=DIFERIDO;
-        }
-        else{
-          cout << "mal momento para este boton..." << endl;
-        }
-      break;
 
 
-      case '3' : 
-        if(modoMenu==SELVISUALIZACION && modoVisualizacion==ILUMINACION){
-
-        }
-      break;
-
-      case '4' : 
-        if(modoMenu==SELVISUALIZACION && modoVisualizacion==ILUMINACION){
-
-        }
-      break;
-
-      case '5' : 
-        if(modoMenu==SELVISUALIZACION && modoVisualizacion==ILUMINACION){
-
-        }
-      break;
    }
    return salir;
 }

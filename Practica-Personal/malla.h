@@ -11,6 +11,7 @@
 #define MALLA3D_H_INCLUDED
 
 #include "aux.h"
+#include "material.h"
 
 
 // *****************************************************************************
@@ -32,24 +33,39 @@ class Malla3D
 
    void draw_ModoAjedrez();
 
-   // función que redibuja el objeto
-   // está función llama a 'draw_ModoInmediato' (modo inmediato)
-   // o bien a 'draw_ModoDiferido' (modo diferido, VBOs)
    void draw(int modoDibujado, bool chessMode) ;
+
+   void setMaterial(Material mat){this->material=mat;}
 
    protected: 
    void calcular_normales() ; // calcula tabla de normales de vértices (práctica 3)
+   void immediateColorPicker(const float R= 0.142, const float G=0.227, const float B=0.239);
+   void deferredColorPicker(const float R=0.195, const float G=0.060, const float B=0.084);
+   void chessColorPicker( const Tupla3f Color1={0.060, 0.110,0.113}, const Tupla3f Color2={0.53, 0.53, 0.53});
+
+
 
    std::vector<Tupla3f> v ;   // tabla de coordenadas de vértices (una tupla por vértice, con tres floats)
    std::vector<Tupla3i> f ;   // una terna de 3 enteros por cada cara o triángulo
-   //std::vector<Tupla3f> c ;   // un vector para almacenar los colores de cada vertice
+
+
+   //Vectores usados para guardar los valores de color de los modos inmediato, diferido y ajedrez;
+   std::vector<Tupla3f> immediateColor;   
+   std::vector<Tupla3f> deferredColor;
+   std::vector<Tupla3f> oddColor;
+   std::vector<Tupla3f> pairColor;
+
+   //Vectores usados para guardar las normales
    std::vector<Tupla3f> nVertex;
    std::vector<Tupla3i> nFaces;
 
    GLuint identificadorVBOv = 0;
    GLuint identificadorVBOf = 0;
    GLuint identificadorVBOc = 0;
-   // completar: tabla de colores, tabla de normales de vértices
+
+   Material material;
+
+
 } ;
 
 

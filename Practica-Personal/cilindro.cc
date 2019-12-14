@@ -25,9 +25,9 @@ Cilindro::Cilindro(const int  num_vert_perfil, const int num_instancias_perf, co
 
 	crearMalla(perfil_original, num_instancias_perf, true, true);
 
-	/*for(int i = 0; i < v.size(); i++){
-		c.push_back({0.53, 0.53, 0.53});
-	}*/
+	immediateColorPicker();
+	deferredColorPicker();
+	chessColorPicker();
 
 
 }

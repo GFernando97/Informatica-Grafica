@@ -17,9 +17,9 @@ Tetraedro::Tetraedro()
         {3, 0, 2}, {0, 3, 1}};	  
   
 
-  	for(int i = 0; i < v.size(); i++){
-    	c.push_back({0.0, 0.0, 0.0}); 
-  	}
+  immediateColorPicker();
+  deferredColorPicker();
+  chessColorPicker();
    // (es importante en cada cara ordenar los vértices en sentido contrario
    //  de las agujas del reloj, cuando esa cara se observa desde el exterior del cubo)
 }

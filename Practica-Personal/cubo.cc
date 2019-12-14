@@ -25,8 +25,8 @@ Cubo::Cubo(float lado)
           { 5, 4, 0 }, { 0, 1, 5 },
           { 6, 7, 3 }, { 3, 2, 6 }};
 
-  for(int i = 0; i < v.size(); i++){
-    c.push_back({0.53, 0.53, 0.53});
-  }         
+  immediateColorPicker();
+  deferredColorPicker();
+  chessColorPicker();        
 }
 
