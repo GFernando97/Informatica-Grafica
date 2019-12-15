@@ -13,6 +13,16 @@
 #include "aux.h"
 #include "material.h"
 
+typedef enum {NADA, SELOBJETO, SELVISUALIZACION, SELDIBUJADO} menu;
+typedef enum {CUBO, TETRAEDRO, ESFERA, CILINDRO, CONO, PLY} objeto;
+typedef enum {PUNTOS, LINEAS, SOLIDO, CHESSMODE, ILUMINACION} visualizacion;
+typedef enum {INMEDIATO, DIFERIDO} dibujado;
+typedef enum {LIGHT0, LIGHT1, LIGHT2, LIGHT3, LIGHT4, LIGHT5, LIGHT6, LIGHT7}idLuz;
+typedef enum {VARBETA, VARALPHA} variacionAngulo;
+typedef enum {DECREMENTO, INCREMENTO} incDecAngulo;
+
+
+
 
 // *****************************************************************************
 //
@@ -25,15 +35,15 @@ class Malla3D
    public:
 
    // dibuja el objeto en modo inmediato
-   void draw_ModoInmediato();
+   void draw_ModoInmediato(visualizacion modoVisualizacion);
 
    // dibuja el objeto en modo diferido (usando VBOs)
    GLuint CrearVBO(GLuint tipo_vbo, GLuint tamanio_bytes, GLvoid * puntero_ram);
-   void draw_ModoDiferido();
+   void draw_ModoDiferido(visualizacion modoVisualizacion);
 
    void draw_ModoAjedrez();
 
-   void draw(int modoDibujado, bool chessMode) ;
+   void draw(dibujado modoDibujado, visualizacion modoVisualizacion);
 
    void setMaterial(Material mat){this->material=mat;}
 

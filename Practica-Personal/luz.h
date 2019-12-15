@@ -6,6 +6,7 @@
 class Luz
 {
 public:
+	Luz(){};
 	void activar();
 
 protected:

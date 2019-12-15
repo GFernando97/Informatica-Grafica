@@ -14,11 +14,6 @@
 //#include "luzposicional.h"
 #include "luz.h"
 
-typedef enum {NADA, SELOBJETO, SELVISUALIZACION, SELDIBUJADO} menu;
-typedef enum {CUBO, TETRAEDRO, ESFERA, CILINDRO, CONO, PLY} objeto;
-typedef enum {PUNTOS, LINEAS, SOLIDO, CHESSMODE, ILUMINACION} visualizacion;
-typedef enum {INMEDIATO, DIFERIDO} dibujado;
-
 
 class Escena
 {
@@ -40,6 +35,9 @@ class Escena
 
    void clear_window();
 
+   incDecAngulo accionAngulo;
+   variacionAngulo variacionSeleccionada;
+   idLuz luzSeleccionada;
    menu modoMenu=NADA;
    visualizacion modoVisualizacion=SOLIDO;
    objeto objetoSeleccionado=CUBO;

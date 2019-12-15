@@ -10,7 +10,7 @@ private:
 	float altura;
 	float radio;
 public:
-	Cono(const int num_vert_perfil=2, const int num_instancias_perf=20, const float altura=40.0, const float radio=30.0);
+	Cono(const int num_vert_perfil=2, const int num_instancias_perf=40, const float altura=40.0, const float radio=30.0);
 };
 
 #endif

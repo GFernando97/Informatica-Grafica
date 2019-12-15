@@ -53,83 +53,50 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
 void Escena::confParametrosDibujado(){
   using namespace std;
 
-  int dibujadoSeleccionado=1;
-  bool chessModeActivado = false;
-  glPointSize(5.0);
-  glShadeModel(GL_FLAT);
-
-  switch(modoVisualizacion){
-    case PUNTOS:
-      glDisable(GL_CULL_FACE);
-      glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-    break;
-
-    case LINEAS:  
-      glDisable(GL_CULL_FACE);    
-      glPolygonMode(GL_FRONT, GL_LINE);
-    break;
-
-    case SOLIDO:
-      glPolygonMode(GL_FRONT, GL_FILL);
-    break;
-
-    case CHESSMODE:
-      glPolygonMode(GL_FRONT, GL_FILL);
-      chessModeActivado=true;
-    break;
-
-    default:
-      cout << "modo: " << modoVisualizacion << endl;
-    break;
-  }
-
-  switch (modoDibujado){
-    case INMEDIATO:
-      dibujadoSeleccionado=1;
-    break;
-
-    case DIFERIDO:
-      dibujadoSeleccionado=0;
-    break;
-  }
 /*
-  //Ahora se van a dibujar objetos simultaneos
+  directionalLight->activar();
+  glShadeModel(GL_SMOOTH);
+  //Dibujar sin ningun parametro, directamente en pantalla
+    //Ahora se van a dibujar objetos simultaneos
+*/
   glPushMatrix();
   glTranslatef(50,50,50);
   if(cubo != nullptr)
-    cubo->draw(, false);
+    cubo->draw(modoDibujado, modoVisualizacion);
   glPopMatrix();
 
   glPushMatrix();
   glTranslatef(-50, -50, -50);
   if(tetraedro != nullptr)
-    tetraedro->draw(2, false);
+    tetraedro->draw(modoDibujado, modoVisualizacion);
   glPopMatrix();
 
   glPushMatrix();
   glTranslatef(50, -50, 50);
   if(cilindro != nullptr)
-    cilindro->draw(2, true);
+    cilindro->draw(modoDibujado, modoVisualizacion);
   glPopMatrix();
 
   glPushMatrix();
   glTranslatef(-50, 50 , 50);
   if(cono != nullptr)
-    cono->draw(2, true);
+    cono->draw(modoDibujado, modoVisualizacion);
   glPopMatrix();
 
   glPushMatrix();
   glTranslatef(-100, 50, 50);
   if(esfera != nullptr)
-    esfera->draw(2, true);
+    esfera->draw(modoDibujado, modoVisualizacion);
   glPopMatrix();
 
+  
   glPushMatrix();
-  glScalef(8.0, 8.0, 8.0);
+  glRotatef(-90.0, 1.0, 0.0, 0.0);
+  glScalef(0.2, 0.2, 0.2);
   if(objply != nullptr)
-    objply->draw(2, true);
+    objply->draw(modoDibujado, modoVisualizacion);
   glPopMatrix();
-  */
+
 
 
 }
@@ -140,53 +107,7 @@ void Escena::dibujar()
 	change_observer();
  // glEnable(GL_LIGHTING);
   ejes.draw();
-  glEnable(GL_CULL_FACE);
-
-/*
-
- // confParametrosDibujado();
-
-  directionalLight->activar();
-  glShadeModel(GL_SMOOTH);
-  //Dibujar sin ningun parametro, directamente en pantalla
-    //Ahora se van a dibujar objetos simultaneos
-
-  glPushMatrix();
-  //glTranslatef(50,50,50);
-  if(cubo != nullptr)
-    cubo->draw(0, false);
-  glPopMatrix();
-*//*
-  glPushMatrix();
-  glTranslatef(-50, -50, -50);
-  if(tetraedro != nullptr)
-    tetraedro->draw(0, false);
-  glPopMatrix();
-
-  glPushMatrix();
-  glTranslatef(50, -50, 50);
-  if(cilindro != nullptr)
-    cilindro->draw(1, false);
-  glPopMatrix();
-
-  glPushMatrix();
-  glTranslatef(-50, 50 , 50);
-  if(cono != nullptr)
-    cono->draw(1, false);
-  glPopMatrix();
-
-  glPushMatrix();
-  glTranslatef(-100, 50, 50);
-  if(esfera != nullptr)
-    esfera->draw(1, false);
-  glPopMatrix();
-
-  */
-  glPushMatrix();
-  glScalef(0.2, 0.2, 0.2);
-  if(objply != nullptr)
-    objply->draw(1, true);
-  glPopMatrix();
+  confParametrosDibujado();
 
   
     
@@ -216,12 +137,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
       break ;
 
-      case 'O' :
-         // ESTAMOS EN MODO SELECCION DE OBJETO
-        modoMenu=SELOBJETO;
-
-      break ;
-
       case 'V' :
          // ESTAMOS EN MODO SELECCION DE MODO DE VISUALIZACION
         modoMenu=SELVISUALIZACION;
@@ -233,51 +148,15 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       break ;
          // COMPLETAR con los diferentes opciones de teclado
    
-      case 'C' :
-        if(modoMenu==SELOBJETO){
-          objetoSeleccionado=CUBO;
-        }
-        else{
-          cout << "mal momento para este boton.." << endl;
-        }
-      break;
-
-
-      //SUBMENÚ SELECCION DE OBJETOS
-      case 'T' :
-        if(modoMenu==SELOBJETO){
-          objetoSeleccionado=TETRAEDRO;
-        }
-        else{
-          cout << "mal momento para este boton..." << endl;
-        }
-      break;
-
-      case 'C':
-        if(modoMenu==SELOBJETO){
-          objetoSeleccionado=CUBO; 
-        }
-
-
-
-      //SUBMENÚ SELECCION VISUALIZACION
-
       case 'P' :
         if(modoMenu==SELVISUALIZACION){
           modoVisualizacion=PUNTOS;
         }
-        else{
-          cout << "mal momento para este boton..." << endl;
-        }
       break;
-
 
       case 'L' :
         if(modoMenu==SELVISUALIZACION){
           modoVisualizacion=LINEAS;
-        }
-        else{
-          cout << "mal momento para este boton..." << endl;
         }
       break;
 
@@ -285,17 +164,15 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
         if(modoMenu==SELVISUALIZACION){
           modoVisualizacion=SOLIDO;
         }
-        else{
-          cout << "mal momento para este boton..." << endl;
-        }
       break;
 
       case 'A' :
         if(modoMenu==SELVISUALIZACION){
           modoVisualizacion=CHESSMODE;
         }
-        else{
-          cout << "mal momento para este boton..." << endl;
+
+        else if(modoMenu==SELVISUALIZACION and modoVisualizacion==ILUMINACION){
+          variacionSeleccionada=VARALPHA;
         }
       break;
 
@@ -303,10 +180,80 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
         if(modoMenu==SELVISUALIZACION){
           modoVisualizacion=ILUMINACION; 
         }
+      break;
 
+      case '0' :
+        if(modoMenu==SELVISUALIZACION and modoVisualizacion==ILUMINACION){
+          luzSeleccionada = LIGHT0;
+        }
+      break;
 
+      case '1' :
+        if(modoMenu==SELVISUALIZACION and modoVisualizacion==ILUMINACION){
+          luzSeleccionada = LIGHT1;
+        }
 
+        else if(modoMenu==SELDIBUJADO){
+          modoDibujado=INMEDIATO;
+        }
+      break;
 
+      case '2' :
+        if(modoMenu==SELVISUALIZACION and modoVisualizacion==ILUMINACION){
+          luzSeleccionada = LIGHT2;
+        }
+        else if(modoMenu==SELDIBUJADO){
+          modoDibujado=DIFERIDO;
+        }
+      break;
+
+      case '3' :
+        if(modoMenu==SELVISUALIZACION and modoVisualizacion==ILUMINACION){
+          luzSeleccionada = LIGHT3;
+        }
+      break;
+
+      case '4' :
+        if(modoMenu==SELVISUALIZACION and modoVisualizacion==ILUMINACION){
+          luzSeleccionada = LIGHT4;
+        }
+      break;
+
+      case '5' :
+        if(modoMenu==SELVISUALIZACION and modoVisualizacion==ILUMINACION){
+          luzSeleccionada = LIGHT5;
+        }
+      break;
+
+      case '6' :
+        if(modoMenu==SELVISUALIZACION and modoVisualizacion==ILUMINACION){
+          luzSeleccionada = LIGHT6;
+        }
+      break;
+
+      case '7' :
+        if(modoMenu==SELVISUALIZACION and modoVisualizacion==ILUMINACION){
+          luzSeleccionada = LIGHT7;
+        }
+      break;
+
+      case 'B' :
+        if(modoMenu==SELVISUALIZACION and modoVisualizacion==ILUMINACION){
+          variacionSeleccionada=VARALPHA;
+        }
+      break;
+
+      case '>' :
+        if(modoMenu==SELVISUALIZACION and modoVisualizacion==ILUMINACION){
+          accionAngulo=INCREMENTO;
+        }
+      break;
+
+      case '<' :
+        if(modoMenu==SELVISUALIZACION and modoVisualizacion==ILUMINACION){
+          accionAngulo=DECREMENTO;
+        }
+      break;
    }
    return salir;
 }

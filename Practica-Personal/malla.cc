@@ -10,22 +10,44 @@ using namespace std;
 
 // Visualización en modo inmediato con 'glDrawElements'
 
-void Malla3D::draw_ModoInmediato()
+void Malla3D::draw_ModoInmediato(visualizacion modoVisualizacion)
 {
   // visualizar la malla usando glDrawElements,
-/*	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_COLOR_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, v.data());
-	glShadeModel(GL_FLAT);
-	glColorPointer(3, GL_FLOAT, 0, immediateColor.data());
+	if(modoVisualizacion != ILUMINACION){
+		if(modoVisualizacion!= CHESSMODE){
+			glShadeModel(GL_FLAT);
+			glEnable(GL_CULL_FACE);
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glDrawElements(GL_TRIANGLES, 3*f.size(), GL_UNSIGNED_INT, f.data());
-	glDisableClientState(GL_COLOR_ARRAY);
-	glDisableClientState(GL_VERTEX_ARRAY);
-*/
-	//Con Material
-	material.aplicar();
+			glEnableClientState(GL_VERTEX_ARRAY);
+		    glVertexPointer(3, GL_FLOAT, 0, v.data());
+		    glShadeModel(GL_FLAT);
+			glEnableClientState(GL_COLOR_ARRAY);
+			glColorPointer(3, GL_FLOAT, 0, immediateColor.data());
+
+			if(modoVisualizacion==SOLIDO){
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			}
+			else if(modoVisualizacion==PUNTOS){
+				  glDisable(GL_CULL_FACE);
+				  glPointSize(2.0);
+				  glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+			}
+
+			else if(modoVisualizacion==LINEAS){
+				glPolygonMode(GL_FRONT, GL_LINE);
+			}
+
+			glDrawElements(GL_TRIANGLES, 3*f.size(), GL_UNSIGNED_INT, f.data());
+			glDisableClientState(GL_COLOR_ARRAY);
+			glDisableClientState(GL_VERTEX_ARRAY);
+		}
+
+		else draw_ModoAjedrez();
+	}
+
+	else{
+		//Con Material
+	/*material.aplicar();
 	if(nVertex.size()==0)
 		calcular_normales();
 	glEnable(GL_NORMALIZE);
@@ -35,7 +57,12 @@ void Malla3D::draw_ModoInmediato()
 	glNormalPointer(GL_FLOAT, 0, nVertex.data());
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, f.data());
-	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);*/
+	}
+
+
+	
+	
 }
 // -----------------------------------------------------------------------------
 // Visualización en modo diferido con 'glDrawElements' (usando VBOs)
@@ -51,7 +78,7 @@ GLuint Malla3D::CrearVBO(GLuint tipo_vbo, GLuint tamanio_bytes, GLvoid * puntero
 	return id_vbo;
 }
 
-void Malla3D::draw_ModoDiferido()
+void Malla3D::draw_ModoDiferido(visualizacion modoVisualizacion)
 {
   if(identificadorVBOv == 0)
     identificadorVBOv = CrearVBO(GL_ARRAY_BUFFER, 3*v.size()*sizeof(float), v.data());
@@ -59,28 +86,43 @@ void Malla3D::draw_ModoDiferido()
     identificadorVBOf = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, 3*f.size()*sizeof(unsigned), f.data());
   if(identificadorVBOc == 0)
     identificadorVBOc = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, 3*deferredColor.size()*sizeof(unsigned), deferredColor.data());
-   // (la primera vez, se deben crear los VBOs y guardar sus identificadores en el objeto)
-   // completar (práctica 1)
-	glBindBuffer(GL_ARRAY_BUFFER, identificadorVBOv);
-	glVertexPointer(3, GL_FLOAT, 0, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glEnableClientState(GL_VERTEX_ARRAY);
+   
+   if(modoVisualizacion != ILUMINACION){
+   		glShadeModel(GL_FLAT);
+		glEnable(GL_CULL_FACE);
+		if(modoVisualizacion!= CHESSMODE){
+			glBindBuffer(GL_ARRAY_BUFFER, identificadorVBOv);
+			glVertexPointer(3, GL_FLOAT, 0, 0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glEnableClientState(GL_VERTEX_ARRAY);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, identificadorVBOf);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, identificadorVBOf);
 
-	glBindBuffer(GL_ARRAY_BUFFER, identificadorVBOc);
-	glColorPointer(3, GL_FLOAT, 0, 0);	
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glEnableClientState(GL_COLOR_ARRAY);
-	glShadeModel(GL_FLAT);
+			glBindBuffer(GL_ARRAY_BUFFER, identificadorVBOc);
+			glColorPointer(3, GL_FLOAT, 0, 0);	
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glEnableClientState(GL_COLOR_ARRAY);
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glDrawElements(GL_TRIANGLES, 3*f.size(),GL_UNSIGNED_INT, 0);
+			if(modoVisualizacion==SOLIDO){
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			}
+			else if(modoVisualizacion==PUNTOS){
+				glDisable(GL_CULL_FACE);
+				glPointSize(2.0);
+				glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+			}
+			else if(modoVisualizacion==LINEAS){
+				glPolygonMode(GL_FRONT, GL_LINE);
+			}
 
-	glDisableClientState(GL_COLOR_ARRAY);
+			glDrawElements(GL_TRIANGLES, 3*f.size(),GL_UNSIGNED_INT, 0);
+			glDisableClientState(GL_COLOR_ARRAY);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			glDisableClientState(GL_VERTEX_ARRAY);
+		}
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glDisableClientState(GL_VERTEX_ARRAY);
+		else draw_ModoAjedrez();
+	}
 }
 // -----------------------------------------------------------------------------
 // Visualización en modo Ajedrez
@@ -112,23 +154,22 @@ void Malla3D::draw_ModoAjedrez()
 // Función de visualización de la malla,
 // puede llamar a  draw_ModoInmediato o bien a draw_ModoDiferido
 
-void Malla3D::draw(int modoDibujado, bool chessMode)
+void Malla3D::draw(dibujado modoDibujado, visualizacion modoVisualizacion )
 {
-	if(chessMode){
-		draw_ModoAjedrez();
+	if(modoDibujado== INMEDIATO){
+		draw_ModoInmediato(modoVisualizacion);
 	}
-	else{
-		if(modoDibujado==0)
-			draw_ModoDiferido();
-		else if(modoDibujado==1)
-			draw_ModoInmediato();
+	else if(modoDibujado==DIFERIDO){
+		draw_ModoDiferido(modoVisualizacion);
 	}
+	
 }
 
 //-----------------------------------------------------------------------------
 // Función de calcular normales
 void Malla3D::calcular_normales()
 {
+	glEnable(GL_NORMALIZE);
 	vector<Tupla3f> NVertex;
 	Tupla3f vAux1, vAux2, vAux3;
 
