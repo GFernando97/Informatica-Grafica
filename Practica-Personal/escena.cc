@@ -19,15 +19,20 @@ Escena::Escena()
     ejes.changeAxisSize( 5000 );
 
     // crear los objetos de la escena....
-    Material m({0.0215,0.1745,0.0215,1.0},{0.07568,0.61424,0.07568,1.0},{0.633,0.727811,0.633,1.0},76.8);
-    directionalLight = new LuzDireccional({100.0, 100.0}, GL_LIGHT1, {0.0,0.0,0.0,1.0},{1.0,1.0,1.0,1.0}, {1.0,1.0,1.0,1.0});
+    Material m(Material({0.0215, 0.1745, 0.0215, 1.0}, {0.633, 0.727811, 0.633, 1.0}, {0.07568, 0.61424, 0.07568, 1.0}, 0.6));
+    directionalLight = new LuzDireccional({1, 1}, GL_LIGHT0, {1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0}, {0.0,0.0,0.0,1.0});
     cubo = new Cubo(); 
     cubo->setMaterial(m);
-    tetraedro = new Tetraedro();  
+    tetraedro = new Tetraedro();
+    tetraedro->setMaterial(m);
     objply = new ObjPLY("plys/Deer.ply");
+    objply->setMaterial(m);
     cilindro = new Cilindro();
+    cilindro->setMaterial(m);
     cono = new Cono();
+    cono->setMaterial(m);
     esfera = new Esfera();
+    esfera->setMaterial(m);
 }
 
 //**************************************************************************
@@ -41,6 +46,7 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
 	glClearColor( 1.0, 1.0, 1.0, 1.0 );// se indica cual sera el color para limpiar la ventana	(r,v,a,al)
   glEnable( GL_DEPTH_TEST );	// se habilita el z-bufer
   redimensionar(UI_window_width, UI_window_height);
+
 }
 
 // **************************************************************************
@@ -59,12 +65,34 @@ void Escena::confParametrosDibujado(){
   //Dibujar sin ningun parametro, directamente en pantalla
     //Ahora se van a dibujar objetos simultaneos
 */
-  glPushMatrix();
-  glTranslatef(50,50,50);
+  if(modoVisualizacion==ILUMINACION and variacionSeleccionada==VARALPHA){
+    if( accionAngulo==INCREMENTO ){
+      directionalLight->variarAnguloAlpha(10.0);   
+    }
+
+    else if(accionAngulo==DECREMENTO){
+      directionalLight->variarAnguloAlpha(-10.0);
+    }
+  }
+
+  if(modoVisualizacion==ILUMINACION and variacionSeleccionada==VARBETA){
+    if( accionAngulo==INCREMENTO ){
+      directionalLight->variarAnguloBeta(10.0);   
+    }
+
+    else if(accionAngulo==DECREMENTO){
+      directionalLight->variarAnguloBeta(-10.0);
+    }
+  }
+  if(modoVisualizacion==ILUMINACION){
+    directionalLight->activar();
+  }
+  /*glPushMatrix();
+  //glTranslatef(50,50,50);
   if(cubo != nullptr)
     cubo->draw(modoDibujado, modoVisualizacion);
   glPopMatrix();
-
+*//*
   glPushMatrix();
   glTranslatef(-50, -50, -50);
   if(tetraedro != nullptr)
@@ -82,23 +110,22 @@ void Escena::confParametrosDibujado(){
   if(cono != nullptr)
     cono->draw(modoDibujado, modoVisualizacion);
   glPopMatrix();
-
-  glPushMatrix();
-  glTranslatef(-100, 50, 50);
+*/
+ /* glPushMatrix();
+ // glTranslatef(-100, 50, 50);
   if(esfera != nullptr)
     esfera->draw(modoDibujado, modoVisualizacion);
   glPopMatrix();
-
-  
+*/
+ 
   glPushMatrix();
   glRotatef(-90.0, 1.0, 0.0, 0.0);
+  glTranslatef(0, 0, -40);
   glScalef(0.2, 0.2, 0.2);
+
   if(objply != nullptr)
     objply->draw(modoDibujado, modoVisualizacion);
   glPopMatrix();
-
-
-
 }
 
 void Escena::dibujar()
@@ -107,10 +134,8 @@ void Escena::dibujar()
 	change_observer();
  // glEnable(GL_LIGHTING);
   ejes.draw();
-  confParametrosDibujado();
 
-  
-    
+  confParametrosDibujado();   
 }
 
 //**************************************************************************
@@ -130,8 +155,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
    switch( toupper(tecla) )
    {
       case 'Q' :
-         if (modoMenu!=NADA)
-            modoMenu=NADA;            
+         if (modoMenu!=NADA){
+            modoMenu=NADA;
+            cout << "Menu Principal.";            
+         }
          else {
             salir=true ;
          }
@@ -140,6 +167,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       case 'V' :
          // ESTAMOS EN MODO SELECCION DE MODO DE VISUALIZACION
         modoMenu=SELVISUALIZACION;
+        cout <<"Selecciona el modo de visualizacion:\n"
+             << "L->Lineas\t S->Solido\t P->Puntos\t A->Ajedrez \t I->Iluminacion\n";
       break ;
 
       case 'D' :
@@ -164,6 +193,9 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
         if(modoMenu==SELVISUALIZACION){
           modoVisualizacion=SOLIDO;
         }
+        else if(modoMenu==SELVISUALIZACION and modoVisualizacion==ILUMINACION){
+          sombreadoSeleccionado=SMOOTH;
+        }
       break;
 
       case 'A' :
@@ -178,6 +210,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
       case 'I' : 
         if(modoMenu==SELVISUALIZACION){
+          cout << "A->Alpha\t B->Beta\t ";
           modoVisualizacion=ILUMINACION; 
         }
       break;
@@ -252,6 +285,12 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       case '<' :
         if(modoMenu==SELVISUALIZACION and modoVisualizacion==ILUMINACION){
           accionAngulo=DECREMENTO;
+        }
+      break;
+
+      case 'F' :
+        if(modoMenu==SELVISUALIZACION and modoVisualizacion==ILUMINACION){
+          sombreadoSeleccionado=FLAT;
         }
       break;
    }

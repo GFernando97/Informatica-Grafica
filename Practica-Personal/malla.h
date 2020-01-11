@@ -18,8 +18,9 @@ typedef enum {CUBO, TETRAEDRO, ESFERA, CILINDRO, CONO, PLY} objeto;
 typedef enum {PUNTOS, LINEAS, SOLIDO, CHESSMODE, ILUMINACION} visualizacion;
 typedef enum {INMEDIATO, DIFERIDO} dibujado;
 typedef enum {LIGHT0, LIGHT1, LIGHT2, LIGHT3, LIGHT4, LIGHT5, LIGHT6, LIGHT7}idLuz;
-typedef enum {VARBETA, VARALPHA} variacionAngulo;
-typedef enum {DECREMENTO, INCREMENTO} incDecAngulo;
+typedef enum {VARBETA, VARALPHA, NINGUNANGULO} variacionAngulo;
+typedef enum {DECREMENTO, INCREMENTO, NINGUNAVARIACION} incDecAngulo;
+typedef enum {SMOOTH, FLAT, NINGUNSOMBREADO} tipoSombreado;
 
 
 
@@ -35,15 +36,18 @@ class Malla3D
    public:
 
    // dibuja el objeto en modo inmediato
-   void draw_ModoInmediato(visualizacion modoVisualizacion);
+   void draw_ModoInmediato(visualizacion modoVisualizacion, tipoSombreado sombreadoSel,
+                           variacionAngulo anguloSel, incDecAngulo variacionSelec );
 
    // dibuja el objeto en modo diferido (usando VBOs)
    GLuint CrearVBO(GLuint tipo_vbo, GLuint tamanio_bytes, GLvoid * puntero_ram);
-   void draw_ModoDiferido(visualizacion modoVisualizacion);
+   void draw_ModoDiferido(visualizacion modoVisualizacion, tipoSombreado sombreadoSel,
+                        variacionAngulo anguloSel, incDecAngulo variacionSelec );
 
    void draw_ModoAjedrez();
 
-   void draw(dibujado modoDibujado, visualizacion modoVisualizacion);
+   void draw(dibujado modoDibujado, visualizacion modoVisualizacion, tipoSombreado sombreadoSel=FLAT, 
+            variacionAngulo anguloSel=NINGUNANGULO,incDecAngulo variacionSelec=NINGUNAVARIACION );
 
    void setMaterial(Material mat){this->material=mat;}
 
@@ -67,7 +71,7 @@ class Malla3D
 
    //Vectores usados para guardar las normales
    std::vector<Tupla3f> nVertex;
-   std::vector<Tupla3i> nFaces;
+   std::vector<Tupla3f> nFaces;
 
    GLuint identificadorVBOv = 0;
    GLuint identificadorVBOf = 0;

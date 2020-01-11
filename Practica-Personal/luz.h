@@ -8,10 +8,11 @@ class Luz
 public:
 	Luz(){};
 	void activar();
+	void desactivar();
 
 protected:
-	Tupla4f position;
 	GLenum id;
+	Tupla4f position;
 	Tupla4f ambientColor;
 	Tupla4f specularColor;
 	Tupla4f diffuseColor;

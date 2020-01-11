@@ -10,7 +10,7 @@ using namespace std;
 
 // Visualización en modo inmediato con 'glDrawElements'
 
-void Malla3D::draw_ModoInmediato(visualizacion modoVisualizacion)
+void Malla3D::draw_ModoInmediato(visualizacion modoVisualizacion, tipoSombreado sombreadoSel, variacionAngulo anguloSel, incDecAngulo variacionSelec)
 {
   // visualizar la malla usando glDrawElements,
 	if(modoVisualizacion != ILUMINACION){
@@ -45,19 +45,46 @@ void Malla3D::draw_ModoInmediato(visualizacion modoVisualizacion)
 		else draw_ModoAjedrez();
 	}
 
-	else{
-		//Con Material
-	/*material.aplicar();
-	if(nVertex.size()==0)
-		calcular_normales();
-	glEnable(GL_NORMALIZE);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, v.data());
-	glNormalPointer(GL_FLOAT, 0, nVertex.data());
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, f.data());
-	glDisableClientState(GL_NORMAL_ARRAY);*/
+	else if(modoVisualizacion==ILUMINACION and sombreadoSel==FLAT){
+		material.aplicar();
+		if(nVertex.empty()) 
+			calcular_normales();
+		glShadeModel(GL_FLAT);
+		glEnable(GL_NORMALIZE);
+
+		glBegin(GL_TRIANGLES);
+
+		for(int i = 0; i < nFaces.size(); i++){
+			glNormal3fv(nFaces[i]);
+
+			glVertex3fv(v[f[i](X)]);
+			glVertex3fv(v[f[i](Y)]);
+			glVertex3fv(v[f[i](Z)]);
+		}
+
+		glEnd();
+	}
+
+	else if(modoVisualizacion==ILUMINACION and sombreadoSel==SMOOTH){
+		cout << "Entra en la condicion ILUMINACION Y FLAT\n ";
+		material.aplicar();
+		cout << "Maria no es real\n";
+		if(nVertex.empty()) {
+			calcular_normales();
+			cout << "Normales calculadas\n";
+		
+		}
+		glShadeModel(GL_FLAT);
+		glEnable(GL_NORMALIZE);
+
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(3, GL_FLOAT, 0, v.data());
+		glNormalPointer(GL_FLOAT, 0, nVertex.data());
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, f.data());
+		glDisableClientState(GL_NORMAL_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
 	}
 
 
@@ -78,7 +105,7 @@ GLuint Malla3D::CrearVBO(GLuint tipo_vbo, GLuint tamanio_bytes, GLvoid * puntero
 	return id_vbo;
 }
 
-void Malla3D::draw_ModoDiferido(visualizacion modoVisualizacion)
+void Malla3D::draw_ModoDiferido(visualizacion modoVisualizacion, tipoSombreado sombreadoSel, variacionAngulo anguloSel, incDecAngulo variacionSelec)
 {
   if(identificadorVBOv == 0)
     identificadorVBOv = CrearVBO(GL_ARRAY_BUFFER, 3*v.size()*sizeof(float), v.data());
@@ -154,13 +181,14 @@ void Malla3D::draw_ModoAjedrez()
 // Función de visualización de la malla,
 // puede llamar a  draw_ModoInmediato o bien a draw_ModoDiferido
 
-void Malla3D::draw(dibujado modoDibujado, visualizacion modoVisualizacion )
+void Malla3D::draw(dibujado modoDibujado, visualizacion modoVisualizacion, tipoSombreado sombreadoSel, 
+            variacionAngulo anguloSel, incDecAngulo variacionSelec)
 {
 	if(modoDibujado== INMEDIATO){
-		draw_ModoInmediato(modoVisualizacion);
+		draw_ModoInmediato(modoVisualizacion, sombreadoSel, anguloSel, variacionSelec);
 	}
 	else if(modoDibujado==DIFERIDO){
-		draw_ModoDiferido(modoVisualizacion);
+		draw_ModoDiferido(modoVisualizacion, sombreadoSel, anguloSel, variacionSelec);
 	}
 	
 }
@@ -169,58 +197,40 @@ void Malla3D::draw(dibujado modoDibujado, visualizacion modoVisualizacion )
 // Función de calcular normales
 void Malla3D::calcular_normales()
 {
-	glEnable(GL_NORMALIZE);
-	vector<Tupla3f> NVertex;
+
 	Tupla3f vAux1, vAux2, vAux3;
+	Tupla3f vOp1, vOp2, vPerp, vNorm;
+	vector<int> auxiliar;
 
-	vector<int> mod;
-
-
-	for(int i = 0; i < v.size(); i++){
+	for(unsigned int i = 0; i < v.size(); i++){
 		nVertex.push_back({0.0, 0.0, 0.0});
+		auxiliar.push_back(0.0);
 	}
 
-	for(int i= 0; i < f.size(); i++){
+	for(unsigned int i = 0; i < f.size(); i++){
 		vAux1 = v[f[i](X)];
 		vAux2 = v[f[i](Y)];
-		vAux3 = v[f[i](X)];
+		vAux3 = v[f[i](Z)];
 
-		Tupla3f dir1, dir2;
+		vOp1 = vAux2 - vAux1;
+		vOp2 = vAux3 - vAux1;
 
-		dir1 = { {vAux2(X)-vAux1(X)}, 
-				 {vAux2(Y)-vAux1(Y)},
-				 {vAux2(Z)-vAux1(Z)}
-				};
+		vPerp = vOp1.cross(vOp2);
+		cout << "Va a calcular las normales\n";
+		vNorm = vPerp.normalized();
+		nFaces.push_back(vNorm);
 
-		dir2 = { {vAux3(X)-vAux1(X)},
-				 {vAux3(Y)-vAux1(Y)},
-				 {vAux3(Z)-vAux1(Z)}
-				};
+		nVertex[f[i](X)] = nVertex[f[i](X)] + nFaces[i];
+		auxiliar[f[i](X)]++;
+		nVertex[f[i](Y)] = nVertex[f[i](Y)] + nFaces[i];
+		auxiliar[f[i](Y)]++;
+		nVertex[f[i](Z)] = nVertex[f[i](Z)] + nFaces[i];
+		auxiliar[f[i](Z)]++;
+	}
 
-		Tupla3f producto_vect;
-
-		producto_vect(X) = dir1(Y)*dir2(Z) - dir1(Z)*dir2(Y);
-		producto_vect(Y) = dir1(Z)*dir2(X) - dir1(X)*dir2(Z);
-		producto_vect(Z) = dir1(X)*dir2(Y) - dir1(Y)*dir2(X);
-
-		float mod = sqrt(producto_vect(X)*producto_vect(X) + 
-						 producto_vect(Y)*producto_vect(Y) + 
-						 producto_vect(Z)*producto_vect(Z));
-
-		nFaces.push_back({(int)producto_vect(X)/mod, (int)producto_vect(Y)/mod, (int)producto_vect(Z)/mod});
-		
-
-	 	nVertex[f[i](X)](X) += nFaces[i](X);
-	    nVertex[f[i](X)](Y) += nFaces[i](Y);
-	    nVertex[f[i](X)](Z) += nFaces[i](Z);
-
-	    nVertex[f[i](Y)](X) += nFaces[i](X);
-	    nVertex[f[i](Y)](Y) += nFaces[i](Y);
-	    nVertex[f[i](Y)](Z) += nFaces[i](Z);
-
-	    nVertex[f[i](Z)](X) += nFaces[i](X);
-	    nVertex[f[i](Z)](Y) += nFaces[i](Y);
-	    nVertex[f[i](Z)](Z) += nFaces[i](Z);
+	for(unsigned int i = 0; i < nVertex.size(); i++){
+		nVertex[i] = nVertex[i] / auxiliar[i];
+		nVertex[i].normalized();
 	}
 }
 

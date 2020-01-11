@@ -5,7 +5,7 @@ LuzDireccional::LuzDireccional(const Tupla2f & direccion, GLenum idLuzOpenGL, Tu
 	position(X) = direccion(X);
 	position(Y) = direccion(Y);
 	position(Z) = 1.0;
-	position(W) = 1.0;
+	position(W) = 0;
 
 	id = idLuzOpenGL;
 
@@ -16,17 +16,17 @@ LuzDireccional::LuzDireccional(const Tupla2f & direccion, GLenum idLuzOpenGL, Tu
 
 
 void LuzDireccional::activar(){
+    glEnable(GL_LIGHTING);
 	glEnable(id);
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glRotatef(alpha, 0, 1, 0);
+	glRotatef(beta, 1, 0, 0);
 	glLightfv(id, GL_AMBIENT, ambientColor);
 	glLightfv(id, GL_DIFFUSE, diffuseColor);
 	glLightfv(id, GL_SPECULAR, specularColor);
 	glLightfv(id, GL_POSITION, position);
-
-
-	position(Y) = cos((beta*M_PI)/180)*position(Y)-sin((beta*M_PI)/180)*position(Z);
-	position(Z) = sin((beta*M_PI)/180)*position(Y)+cos((beta*M_PI)/180)*position(Z);
-
-	glLightfv(id, GL_POSITION, position);
+	glPopMatrix();
 }
 
 void LuzDireccional::variarAnguloAlpha(float incremento){

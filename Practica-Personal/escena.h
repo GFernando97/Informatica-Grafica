@@ -11,6 +11,7 @@
 #include "objrevolucion.h"
 #include "objply.h"
 #include "luzdireccional.h"
+#include "material.h"
 //#include "luzposicional.h"
 #include "luz.h"
 
@@ -30,18 +31,16 @@ class Escena
     // Transformación de cámara
 	void change_projection( const float ratio_xy );
 	void change_observer();
-    
+  void clear_window();
 
-
-   void clear_window();
-
-   incDecAngulo accionAngulo;
-   variacionAngulo variacionSeleccionada;
-   idLuz luzSeleccionada;
-   menu modoMenu=NADA;
-   visualizacion modoVisualizacion=SOLIDO;
-   objeto objetoSeleccionado=CUBO;
-   dibujado modoDibujado=INMEDIATO;
+  tipoSombreado sombreadoSeleccionado=FLAT;
+  incDecAngulo accionAngulo;
+  variacionAngulo variacionSeleccionada;
+  idLuz luzSeleccionada;
+  menu modoMenu=NADA;
+  visualizacion modoVisualizacion=SOLIDO;
+  objeto objetoSeleccionado=CUBO;
+  dibujado modoDibujado=INMEDIATO;
 
    // Objetos de la escena
   LuzDireccional * directionalLight = nullptr;
