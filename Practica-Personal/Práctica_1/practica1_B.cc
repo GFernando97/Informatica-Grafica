@@ -28,7 +28,9 @@ int UI_window_pos_x=50,UI_window_pos_y=50,UI_window_width=450,UI_window_height=4
 
 
 _piramide piramide(0.85,1.3);
-_cubo cubo(0.2);
+_cubo cubo(0.8);
+int objeto;
+int modo;
 
 //**************************************************************************
 //
@@ -101,7 +103,26 @@ glEnd();
 void draw_objects()
 {
      
- piramide.draw_aristas(1.0,0.5,0.0,3);
+if(objeto== 0)
+    switch(modo){
+        case 0: piramide.draw_puntos(1.0,0.5,0.0,4); break;
+        case 1: piramide.draw_aristas(1.0,0.5,0.0,2); break;
+        case 2: piramide.draw_solido(1.0,0.5,0.0); break;
+        case 3: piramide.draw_solido_ajedrez(1.0,0.5,0.0,0.2,0.7,0.4); break;  
+    }
+
+
+else if(objeto==1)
+    switch(modo){
+        case 0: cubo.draw_puntos(1.0,0.5,0.0,4); break;
+        case 1: cubo.draw_aristas(1.0,0.5,0.0,2); break;
+        case 2: cubo.draw_solido(1.0,0.5,0.0); break;
+        case 3: cubo.draw_solido_ajedrez(1.0,0.5,0.0,0.2,0.7,0.4); break;  
+
+    }
+
+
+
 }
 
 
@@ -149,9 +170,18 @@ glutPostRedisplay();
 
 void normal_keys(unsigned char Tecla1,int x,int y)
 {
+if(toupper(Tecla1)=='Q') exit(0);
+switch (toupper(Tecla1)){
+    case 'P': modo=0; glutPostRedisplay(); break;
+    case 'L': modo=1; glutPostRedisplay(); break;
+    case 'S': modo=2; glutPostRedisplay(); break;
+    case 'A': modo=3; glutPostRedisplay(); break;
 
-if (toupper(Tecla1)=='Q') exit(0);
+    case '1': objeto=0; glutPostRedisplay(); break;
+    case '2': objeto=1; glutPostRedisplay(); break;
 }
+}
+
 
 //***************************************************************************
 // Funcion llamada cuando se produce aprieta una tecla especial

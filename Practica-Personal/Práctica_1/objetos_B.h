@@ -24,6 +24,12 @@ public:
 void 	draw_puntos(float r, float g, float b, int grosor);
 
 vector<_vertex3f> vertices;
+float r,g,b; 	//Color de las figura
+int grosor;	//Grosor de las lineas de la  figura
+vector<_vertex3f> face_Color;	// 
+
+//Metodos para cambiar el color y el grosor como ampliación.
+
 };
 
 //*************************************************************************
@@ -52,6 +58,7 @@ class _cubo: public _triangulos3D
 public:
 
 	_cubo(float tam=0.5);
+
 };
 
 
@@ -66,8 +73,16 @@ public:
 	_piramide(float tam=0.5, float al=0.75);
 };
 
+/*
+class _esfera: public _triangulos3D{
+
+public:
+
+_esfera(float radio = 0.5, int n, int m );
+
+};
 
 
 
-
+*/
 
