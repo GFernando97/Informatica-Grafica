@@ -73,16 +73,6 @@ public:
 	_piramide(float tam=0.5, float al=0.75);
 };
 
-/*
-class _esfera: public _triangulos3D{
-
-public:
-
-_esfera(float radio = 0.5, int n, int m );
-
-};
 
 
-
-*/
 
