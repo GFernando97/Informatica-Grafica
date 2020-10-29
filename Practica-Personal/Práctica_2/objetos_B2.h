@@ -10,6 +10,9 @@
 
 const float AXIS_SIZE=5000;
 typedef enum{POINTS,EDGES,SOLID_CHESS,SOLID} _modo;
+typedef enum{CUBO, PIRAMIDE, OBJETO_PLY, ESFERA, CONO, CILINDRO} _tipo_objeto;
+
+//typedef enum{ESFERA, CONO, CILINDRO} _objRotacion;
 
 //*************************************************************************
 // clase punto
@@ -45,6 +48,33 @@ vector<_vertex3i> caras;
 
 
 //*************************************************************************
+// clase objeto ply
+//*************************************************************************
+
+class _objeto_ply: public _triangulos3D
+{
+public:
+   _objeto_ply();
+
+int   parametros(char *archivo);
+};
+
+//************************************************************************
+// objeto por revolución
+//************************************************************************
+
+class _rotacion: public _triangulos3D
+{
+public:
+       _rotacion();
+void  parametros(vector<_vertex3f> perfil1, int num1, _tipo_objeto tipo);
+
+vector<_vertex3f> perfil; 
+int num;
+};
+
+
+//*************************************************************************
 // clase cubo
 //*************************************************************************
 
@@ -67,29 +97,29 @@ public:
 	_piramide(float tam=0.5, float al=0.75);
 };
 
-//*************************************************************************
-// clase objeto ply
-//*************************************************************************
 
-class _objeto_ply: public _triangulos3D
-{
+
+
+class _esfera: public _rotacion{
+
 public:
-   _objeto_ply();
 
-int   parametros(char *archivo);
+_esfera(float radio=2.0, int n_vert=20, int n_inst=30);
+
 };
 
-//************************************************************************
-// objeto por revolución
-//************************************************************************
 
-class _rotacion: public _triangulos3D
-{
+class _cono: public _rotacion{
+
 public:
-       _rotacion();
-void  parametros(vector<_vertex3f> perfil1, int num1);
-
-vector<_vertex3f> perfil; 
-int num;
+	_cono(float radio=2.0, int n_rev=30, int altura=2);
 };
+
+
+class _cilindro: public _rotacion{
+public:
+	_cilindro(float radio=2.0, int n_rev=20, int altura=2);
+};
+
+
 

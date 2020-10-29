@@ -12,7 +12,6 @@
 using namespace std;
 
 // tipos
-typedef enum{CUBO, PIRAMIDE, OBJETO_PLY, ROTACION} _tipo_objeto;
 _tipo_objeto t_objeto=CUBO;
 _modo   modo=POINTS;
 
@@ -33,6 +32,9 @@ _cubo cubo;
 _piramide piramide(0.85,1.3);
 _objeto_ply  ply; 
 _rotacion rotacion; 
+_esfera esfera;
+_cilindro cilindro;
+_cono cono;
 
 // _objeto_ply *ply1;
 
@@ -115,7 +117,9 @@ switch (t_objeto){
 	case CUBO: cubo.draw(modo,1.0,0.0,0.0,0.0,1.0,0.0,2);break;
 	case PIRAMIDE: piramide.draw(modo,1.0,0.0,0.0,0.0,1.0,0.0,2);break;
         case OBJETO_PLY: ply.draw(modo,1.0,0.6,0.0,0.0,1.0,0.3,2);break;
-        case ROTACION: rotacion.draw(modo,1.0,0.0,0.0,0.0,1.0,0.0,2);break;
+        case ESFERA: esfera.draw(modo,1.0,0.0,0.0,0.0,1.0,0.0,2);break;
+        case CONO: cono.draw(modo,1.0,0.0,0.0,0.0,1.0,0.0,2);break;
+        case CILINDRO: cilindro.draw(modo,1.0,0.0,0.0,0.0,1.0,0.0,2);break;
 	}
 
 }
@@ -177,7 +181,10 @@ switch (toupper(Tecla1)){
         case 'P':t_objeto=PIRAMIDE;break;
         case 'C':t_objeto=CUBO;break;
         case 'O':t_objeto=OBJETO_PLY;break;	
-        case 'R':t_objeto=ROTACION;break;
+        //case 'R':t_objeto=ROTACION;break;
+        case 'A':t_objeto=ESFERA;break;
+        case 'S':t_objeto=CILINDRO;break;
+        case 'D':t_objeto=CONO;break;
 	}
 glutPostRedisplay();
 }
@@ -265,7 +272,7 @@ aux.x=1.0; aux.y=1.0; aux.z=0.0;
 perfil2.push_back(aux);
 
 
-rotacion.parametros(perfil2,6);
+//rotacion.parametros(perfil2,6);
 
 
 
@@ -291,7 +298,7 @@ glutInitWindowSize(Window_width,Window_high);
 
 // llamada para crear la ventana, indicando el titulo (no se visualiza hasta que se llama
 // al bucle de eventos)
-glutCreateWindow("PRACTICA - 2");
+glutCreateWindow("PRACTICA - 2: Fernando Lojano");
 
 // asignación de la funcion llamada "dibujar" al evento de dibujo
 glutDisplayFunc(draw);
