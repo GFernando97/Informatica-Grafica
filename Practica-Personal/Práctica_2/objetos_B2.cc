@@ -18,10 +18,10 @@ _puntos3D::_puntos3D()
 // dibujar puntos
 //*************************************************************************
 
-void _puntos3D::draw_puntos(float r, float g, float b, int grosor){
+void _puntos3D::draw_puntos(int grosor){
   unsigned int i;
   glPointSize(grosor);
-  glColor3f(r,g,b);
+  glColor3f(color1._0, color1._1, color1._2);
   glBegin(GL_POINTS);
   for (i=0;i<vertices.size();i++){
   	glVertex3fv((GLfloat *) &vertices[i]);
@@ -43,11 +43,11 @@ _triangulos3D::_triangulos3D()
 // dibujar en modo arista
 //*************************************************************************
 
-void _triangulos3D::draw_aristas(float r, float g, float b, int grosor){
+void _triangulos3D::draw_aristas(int grosor){
   unsigned int i;
   glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
   glLineWidth(grosor);
-  glColor3f(r,g,b);
+  glColor3f(color1._0, color1._1, color1._2);
   glBegin(GL_TRIANGLES);
   for (i=0;i<caras.size();i++){
   	glVertex3fv((GLfloat *) &vertices[caras[i]._0]);
@@ -61,11 +61,11 @@ void _triangulos3D::draw_aristas(float r, float g, float b, int grosor){
 // dibujar en modo sólido
 //*************************************************************************
 
-void _triangulos3D::draw_solido(float r, float g, float b){
+void _triangulos3D::draw_solido(){
   unsigned int i;
   glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
   glLineWidth(0.7);
-  glColor3f(r,g,b);
+  glColor3f(color1._0, color1._1, color1._2);
   glBegin(GL_TRIANGLES);
   for (i=0;i<caras.size();i++){
     glVertex3fv((GLfloat *) &vertices[caras[i]._0]);
@@ -79,7 +79,7 @@ void _triangulos3D::draw_solido(float r, float g, float b){
 // dibujar en modo sólido con apariencia de ajedrez
 //*************************************************************************
 
-void _triangulos3D::draw_solido_ajedrez(float r1, float g1, float b1, float r2, float g2, float b2){
+void _triangulos3D::draw_solido_ajedrez(){
   unsigned int i;
   glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
   glLineWidth(0.7);
@@ -89,13 +89,13 @@ void _triangulos3D::draw_solido_ajedrez(float r1, float g1, float b1, float r2, 
   for (i=0;i<caras.size();i++)
   {
   if ( i %2 == 0 ){
-    glColor3f(r1,g1,b1);
+    glColor3f(color1._0, color1._1, color1._2);
     glVertex3fv((GLfloat *) &vertices[caras[i]._0]);
     glVertex3fv((GLfloat *) &vertices[caras[i]._1]);
     glVertex3fv((GLfloat *) &vertices[caras[i]._2]);
   }
   else {
-    glColor3f(r2,g2,b2);
+    glColor3f(color2._0, color2._1, color2._2);
     glVertex3fv((GLfloat *) &vertices[caras[i]._0]);
     glVertex3fv((GLfloat *) &vertices[caras[i]._1]);
     glVertex3fv((GLfloat *) &vertices[caras[i]._2]);
@@ -111,14 +111,43 @@ void _triangulos3D::draw_solido_ajedrez(float r1, float g1, float b1, float r2, 
 // dibujar con distintos modos
 //*************************************************************************
 
-void _triangulos3D::draw(_modo modo, float r1, float g1, float b1, float r2, float g2, float b2, float grosor){
+void _triangulos3D::draw(_modo modo, float grosor, _opcion &x){
+  if(x==COLORPICKER){
+  colorPicker();
+  x=NO_OPTION;
+}
   switch (modo){
-  	case POINTS:draw_puntos(r1, g1, b1, grosor);break;
-  	case EDGES:draw_aristas(r1, g1, b1, grosor);break;
-  	case SOLID_CHESS:draw_solido_ajedrez(r1, g1, b1, r2, g2, b2);break;
-  	case SOLID:draw_solido(r1, g1, b1);break;
+  	case POINTS:draw_puntos(grosor);break;
+  	case EDGES:draw_aristas(grosor);break;
+  	case SOLID_CHESS:draw_solido_ajedrez();break;
+  	case SOLID:draw_solido();break;
   }
 }
+
+
+//*************************************************************************
+// Cambiar color caras
+//*************************************************************************
+
+void _puntos3D::colorPicker(){
+  vector<float>valoresGenerados;
+  valoresGenerados.resize(6);
+  srand((unsigned) time(0));
+
+  for(unsigned int i = 0; i < (unsigned int)valoresGenerados.size(); i++){
+    int valor = (rand()%255);
+    double transformada = 1.0/255.0*valor;
+    valoresGenerados[i] = transformada;
+  }
+
+  color1._0=valoresGenerados[0]; 
+  color1._1=valoresGenerados[1]; 
+  color1._2=valoresGenerados[2];
+  color2._0=valoresGenerados[3]; 
+  color2._1=valoresGenerados[4]; 
+  color2._2=valoresGenerados[5]; 
+}
+
 
 //*************************************************************************
 // clase cubo

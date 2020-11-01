@@ -11,10 +11,10 @@
 
 using namespace std;
 
-// tipos
+//Variables Teclado
+_opcion opcion=NO_OPTION;
 _tipo_objeto t_objeto=CUBO;
 _modo   modo=POINTS;
-
 // variables que definen la posicion de la camara en coordenadas polares
 GLfloat Observer_distance;
 GLfloat Observer_angle_x;
@@ -29,7 +29,7 @@ int Window_x=50,Window_y=50,Window_width=450,Window_high=450;
 
 // objetos
 _cubo cubo;
-_piramide piramide(0.85,1.3);
+_piramide piramide;
 _objeto_ply  ply; 
 _rotacion rotacion; 
 _esfera esfera;
@@ -114,12 +114,12 @@ void draw_objects()
 {
 
 switch (t_objeto){
-	case CUBO: cubo.draw(modo,1.0,0.0,0.0,0.0,1.0,0.0,2);break;
-	case PIRAMIDE: piramide.draw(modo,1.0,0.0,0.0,0.0,1.0,0.0,2);break;
-        case OBJETO_PLY: ply.draw(modo,1.0,0.6,0.0,0.0,1.0,0.3,2);break;
-        case ESFERA: esfera.draw(modo,1.0,0.0,0.0,0.0,1.0,0.0,2);break;
-        case CONO: cono.draw(modo,1.0,0.0,0.0,0.0,1.0,0.0,2);break;
-        case CILINDRO: cilindro.draw(modo,1.0,0.0,0.0,0.0,1.0,0.0,2);break;
+	case CUBO: cubo.draw(modo,2,opcion);break;
+	case PIRAMIDE: piramide.draw(modo,2,opcion);break;
+        case OBJETO_PLY: ply.draw(modo,2,opcion);break;
+        case ESFERA: esfera.draw(modo,2,opcion);break;
+        case CONO: cono.draw(modo,2,opcion);break;
+        case CILINDRO: cilindro.draw(modo,2,opcion);break;
 	}
 
 }
@@ -178,13 +178,13 @@ switch (toupper(Tecla1)){
 	case '2':modo=EDGES;break;
 	case '3':modo=SOLID;break;
 	case '4':modo=SOLID_CHESS;break;
-        case 'P':t_objeto=PIRAMIDE;break;
-        case 'C':t_objeto=CUBO;break;
-        case 'O':t_objeto=OBJETO_PLY;break;	
-        //case 'R':t_objeto=ROTACION;break;
-        case 'A':t_objeto=ESFERA;break;
-        case 'S':t_objeto=CILINDRO;break;
-        case 'D':t_objeto=CONO;break;
+    case 'P':t_objeto=PIRAMIDE;break;
+    case 'C':t_objeto=CUBO;break;
+    case 'O':t_objeto=OBJETO_PLY;break;	
+    case 'A':t_objeto=ESFERA;break;
+    case 'S':t_objeto=CILINDRO;break;
+    case 'D':t_objeto=CONO;break;
+    case 'X':opcion=COLORPICKER;break;
 	}
 glutPostRedisplay();
 }
