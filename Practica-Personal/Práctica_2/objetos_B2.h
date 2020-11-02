@@ -12,7 +12,7 @@
 const float AXIS_SIZE=5000;
 typedef enum{COLORPICKER, NO_OPTION} _opcion;
 typedef enum{POINTS,EDGES,SOLID_CHESS,SOLID} _modo;
-typedef enum{CUBO, PIRAMIDE, OBJETO_PLY, ESFERA, CONO, CILINDRO} _tipo_objeto;
+typedef enum{CUBO, PIRAMIDE, OBJETO_PLY, ESFERA, CONO, CILINDRO, GENERICO} _tipo_objeto;
 
 //*************************************************************************
 // clase punto
@@ -102,8 +102,6 @@ public:
 };
 
 
-
-
 class _esfera: public _rotacion{
 
 public:
@@ -123,6 +121,11 @@ public:
 class _cilindro: public _rotacion{
 public:
 	_cilindro(float radio=2.0, int n_rev=20, int altura=2);
+};
+
+class _copa: public _rotacion{
+public: 
+	_copa();
 };
 
 

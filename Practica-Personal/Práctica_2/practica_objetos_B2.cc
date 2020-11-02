@@ -35,6 +35,7 @@ _rotacion rotacion;
 _esfera esfera;
 _cilindro cilindro;
 _cono cono;
+_copa copa;
 
 // _objeto_ply *ply1;
 
@@ -120,6 +121,7 @@ switch (t_objeto){
         case ESFERA: esfera.draw(modo,2,opcion);break;
         case CONO: cono.draw(modo,2,opcion);break;
         case CILINDRO: cilindro.draw(modo,2,opcion);break;
+        case GENERICO: copa.draw(modo,2,opcion);break;
 	}
 
 }
@@ -185,6 +187,7 @@ switch (toupper(Tecla1)){
     case 'S':t_objeto=CILINDRO;break;
     case 'D':t_objeto=CONO;break;
     case 'X':opcion=COLORPICKER;break;
+    case 'G':t_objeto=GENERICO;break;
 	}
 glutPostRedisplay();
 }

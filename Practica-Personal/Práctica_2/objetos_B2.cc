@@ -277,6 +277,27 @@ _cono::_cono(float radio, int n_rev, int altura){
 }
 
 //*************************************************************************
+// clase copa
+//*************************************************************************
+_copa::_copa(){
+  vector<_vertex3f> perfil;
+  _vertex3f aux;
+  perfil.push_back({2.0,0.0,0.0});
+  perfil.push_back({0.15,1.0,0.0});
+  perfil.push_back({0.2,1.5,0.0});
+  perfil.push_back({0.2,2.0,0.0});
+
+  for(int i= 0.2; i < 3; i++){
+    
+    aux.x=i;
+    aux.y=1.9+(i*i);
+    aux.z=0.0;
+    perfil.push_back(aux);
+  }
+ 
+  parametros(perfil, 30, GENERICO);
+}
+//*************************************************************************
 // clase objeto ply
 //*************************************************************************
 
