@@ -275,9 +275,6 @@ aux.x=1.0; aux.y=1.0; aux.z=0.0;
 perfil2.push_back(aux);
 
 
-//rotacion.parametros(perfil2,6);
-
-
 
 // se llama a la inicialización de glut
 glutInit(&argc, argv);
