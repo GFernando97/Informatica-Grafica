@@ -22,7 +22,7 @@ Ahora, se añaden los botones referentes a la visualización de objetos por revo
 
 Por último, también se ha incluido una opción para cambiar el color de los objetos
 
- * **X** - *Cambia Color* - El objeto seleccionado cambia a cualquier color cada vez que se pulse el botón. De no ser pulsado mas veces, mantendrá su color en todos los tipos de visualizaciones hasta cambiar de figura, momento en el cual, se genera una nueva figura con el color original(Morado). 
+ * **X** - *Cambia Color* - El objeto seleccionado cambia a cualquier color aleatorio cada vez que se pulse el botón. De no ser pulsado mas veces, mantendrá su color en todos los tipos de visualizaciones hasta cambiar de figura, momento en el cual, se genera una nueva figura con el color original(Morado). 
 
 ---
 G. Fernando 
