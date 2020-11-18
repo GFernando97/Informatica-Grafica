@@ -27,14 +27,17 @@ glEnableClientState(GL_VERTEX_ARRAY);
 glVertexPointer(3,GL_FLOAT,0,&vertices[0]);
 glDrawArrays(GL_POINTS,0,vertices.size()); 
 
-/*int i;
+int i;
 glPointSize(grosor);
+
 glColor3f(r,g,b);
 glBegin(GL_POINTS);
 for (i=0;i<vertices.size();i++){
 	glVertex3fv((GLfloat *) &vertices[i]);
-	}
-glEnd();*/
+}
+
+glEnd();
+
 }
 
 

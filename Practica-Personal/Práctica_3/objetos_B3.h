@@ -46,6 +46,18 @@ vector<_vertex3i> caras;
 };
 
 
+
+class _rotacion: public _triangulos3D
+{
+public:
+       _rotacion();
+void  parametros(vector<_vertex3f> perfil1, int num1, _tipo_objeto tipo);
+
+vector<_vertex3f> perfil; 
+int num;
+};
+
+
 //*************************************************************************
 // clase cubo
 //*************************************************************************
@@ -54,7 +66,7 @@ class _cubo: public _triangulos3D
 {
 public:
 
-	_cubo(float tam=0.5);
+  _cubo(float tam=0.5);
 };
 
 
@@ -66,36 +78,49 @@ class _piramide: public _triangulos3D
 {
 public:
 
-	_piramide(float tam=0.5, float al=0.75);
+  _piramide(float tam=0.85, float al=1.3);
 };
 
 //*************************************************************************
-// clase objeto ply
+// clase esfera
 //*************************************************************************
 
-class _objeto_ply: public _triangulos3D
-{
-public:
-   _objeto_ply();
+class _esfera: public _rotacion{
 
-int   parametros(char *archivo);
+public:
+
+_esfera(float radio=2.0, int n_vert=20, int n_inst=30);
+
 };
 
-//************************************************************************
-// objeto por revolución
-//************************************************************************
+//*************************************************************************
+// clase cono
+//*************************************************************************
 
-class _rotacion: public _triangulos3D
-{
+class _cono: public _rotacion{
+
 public:
-       _rotacion();
-void  parametros(vector<_vertex3f> perfil1, int num1, int tapas);
-
-vector<_vertex3f> perfil; 
-int num;
+  _cono(float radio=2.0, int n_rev=30, int altura=2);
 };
 
 
+//*************************************************************************
+// clase cilindro
+//*************************************************************************
+
+class _cilindro: public _rotacion{
+public:
+  _cilindro(float radio=2.0, int n_rev=20, int altura=2);
+};
+
+
+//*************************************************************************
+// clase copa
+//*************************************************************************
+
+class _copa: public _rotacion{
+public: 
+  _copa();
 //************************************************************************
 // objeto articulado: tanque
 //************************************************************************
