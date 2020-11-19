@@ -1,5 +1,5 @@
 //**************************************************************************
-// Práctica 3 usando objetos
+// Práctica 1 usando objetos
 //**************************************************************************
 
 #include <GL/glut.h>
@@ -11,11 +11,10 @@
 
 using namespace std;
 
-// tipos
-typedef enum{CUBO, PIRAMIDE, OBJETO_PLY, ROTACION, ARTICULADO} _tipo_objeto;
+//Variables Teclado
+_opcion opcion=NO_OPTION;
 _tipo_objeto t_objeto=CUBO;
 _modo   modo=POINTS;
-
 // variables que definen la posicion de la camara en coordenadas polares
 GLfloat Observer_distance;
 GLfloat Observer_angle_x;
@@ -30,10 +29,16 @@ int Window_x=50,Window_y=50,Window_width=450,Window_high=450;
 
 // objetos
 _cubo cubo;
-_piramide piramide(0.85,1.3);
+_piramide piramide;
 _objeto_ply  ply; 
 _rotacion rotacion; 
+_esfera esfera;
+_cilindro cilindro;
+_cono cono;
+_copa copa;
 _tanque tanque;
+_semiesfera semiesfera;
+_cabezaR cabeza;
 
 // _objeto_ply *ply1;
 
@@ -113,12 +118,17 @@ void draw_objects()
 {
 
 switch (t_objeto){
-	case CUBO: cubo.draw(modo,1.0,0.0,0.0,0.0,1.0,0.0,2);break;
-	case PIRAMIDE: piramide.draw(modo,1.0,0.0,0.0,0.0,1.0,0.0,2);break;
-        case OBJETO_PLY: ply.draw(modo,1.0,0.6,0.0,0.0,1.0,0.3,2);break;
-        case ROTACION: rotacion.draw(modo,1.0,0.0,0.0,0.0,1.0,0.0,2);break;
-        case ARTICULADO: tanque.draw(modo,0.5,0.7,0.2,0.3,0.6,0.3,2);break;
+	case CUBO: cubo.draw(modo,2,opcion);break;
+	case PIRAMIDE: piramide.draw(modo,2,opcion);break;
+        case OBJETO_PLY: ply.draw(modo,2,opcion);break;
+        case ESFERA: cabeza.draw(modo,2,opcion);break;
+        case CONO: cono.draw(modo,2,opcion);break;
+        case CILINDRO: cilindro.draw(modo,2,opcion);break;
+        case GENERICO: copa.draw(modo,2,opcion);break;
+        case ARTICULADO: tanque.draw(modo,2,opcion);break;
 	}
+	opcion=NO_OPTION;
+
 
 }
 
@@ -176,11 +186,15 @@ switch (toupper(Tecla1)){
 	case '2':modo=EDGES;break;
 	case '3':modo=SOLID;break;
 	case '4':modo=SOLID_CHESS;break;
-        case 'P':t_objeto=PIRAMIDE;break;
-        case 'C':t_objeto=CUBO;break;
-        case 'O':t_objeto=OBJETO_PLY;break;	
-        case 'R':t_objeto=ROTACION;break;
-        case 'A':t_objeto=ARTICULADO;break;
+    case 'P':t_objeto=PIRAMIDE;break;
+    case 'C':t_objeto=CUBO;break;
+    case 'O':t_objeto=OBJETO_PLY;break;	
+    case 'A':t_objeto=ESFERA;break;
+    case 'S':t_objeto=CILINDRO;break;
+    case 'D':t_objeto=CONO;break;
+    case 'X':opcion=COLORPICKER;break;
+    case 'G':t_objeto=GENERICO;break;
+    case 'T':t_objeto=ARTICULADO;break;
 	}
 glutPostRedisplay();
 }
@@ -259,19 +273,17 @@ glViewport(0,0,Window_width,Window_high);
 //***************************************************************************
 
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[] )
 {
  
 
-// creación del objeto ply
-
-ply.parametros(argv[1]);
 
 
 // perfil 
-
+/*
 vector<_vertex3f> perfil2;
 _vertex3f aux;
+
 aux.x=1.0;aux.y=-1.4;aux.z=0.0;
 perfil2.push_back(aux);
 aux.x=1.0;aux.y=-1.1;aux.z=0.0;
@@ -294,9 +306,8 @@ aux.x=0.5;aux.y=1.2;aux.z=0.0;
 perfil2.push_back(aux);
 aux.x=0.3;aux.y=1.4;aux.z=0.0;
 perfil2.push_back(aux);
-rotacion.parametros(perfil2,6,1);
-
-
+rotacion.parametros(perfil2,6,GENERICO, true,true);
+*/
 // se llama a la inicialización de glut
 glutInit(&argc, argv);
 
@@ -319,7 +330,7 @@ glutInitWindowSize(Window_width,Window_high);
 
 // llamada para crear la ventana, indicando el titulo (no se visualiza hasta que se llama
 // al bucle de eventos)
-glutCreateWindow("PRACTICA - 2");
+glutCreateWindow("PRACTICA - 2: Fernando Lojano");
 
 // asignación de la funcion llamada "dibujar" al evento de dibujo
 glutDisplayFunc(draw);
@@ -332,6 +343,11 @@ glutSpecialFunc(special_key);
 
 // funcion de inicialización
 initialize();
+
+// creación del objeto ply
+ply.parametros(argv[1]);
+
+//ply1 = new _objeto_ply(argv[1]);
 
 // inicio del bucle de eventos
 glutMainLoop();
