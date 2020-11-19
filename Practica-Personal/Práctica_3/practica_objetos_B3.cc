@@ -37,9 +37,11 @@ _cilindro cilindro;
 _cono cono;
 _copa copa;
 _tanque tanque;
+//Ejemplos: Borrar despues
 _semiesfera semiesfera;
 _cabezaR cabeza;
-
+_brazoR brazo;
+_piernaR pierna;
 // _objeto_ply *ply1;
 
 

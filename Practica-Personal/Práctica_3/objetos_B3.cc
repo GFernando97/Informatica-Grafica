@@ -209,6 +209,7 @@ _piramide::_piramide(float tam, float al){
 // clase esfera
 //*************************************************************************
 
+
 _esfera::_esfera(float radio, int n_vert, int n_inst){
   vector<_vertex3f> perfil;
   _vertex3f aux;
@@ -219,20 +220,10 @@ _esfera::_esfera(float radio, int n_vert, int n_inst){
     aux.z=0.0;
     perfil.push_back(aux);
     }
-    /* 
-      float incremento = 180.0/(float)(n_vert-1);
-      for(float i = -90.0+incremento ; i <=90.0; i+=incremento){
-        aux.x = cos(i*M_PI/180)*radio;
-        aux.y = sin(i*M_PI/180)*radio;
-        aux.z = 0.0;
-        perfil.push_back(aux);
-      }
 
-      perfil.push_back({0.0, radio, 0.0});
-    */
-
-  parametros(perfil, n_inst, SEMIESFERA, true, true);
+  parametros(perfil, n_inst, ESFERA, true, true);
 }
+
 
 //*************************************************************************
 // clase cilindro
@@ -424,9 +415,9 @@ void _rotacion::parametros(vector<_vertex3f> perfil, int num, _tipo_objeto tipo,
     vertices[num_aux*num].x = 0.0;
     vertices[num_aux*num].z = 0.0;
     switch(tipo){
+      case ESFERA:     vertices[num_aux*num].y = -radio;break;
       case SEMIESFERA: vertices[num_aux*num].y = 0.0;break;
       case CONO:       vertices[num_aux*num].y = 0.0;break;
-      case ESFERA:     vertices[num_aux*num].y = -radio;break;
       default:         vertices[num_aux*num].y = perfil[0].y;break;
     }
 
@@ -444,9 +435,9 @@ void _rotacion::parametros(vector<_vertex3f> perfil, int num, _tipo_objeto tipo,
     vertices[num_aux*num+1].x = 0.0;
     vertices[num_aux*num+1].z = 0.0;
     switch(tipo){
+      case ESFERA:     vertices[num_aux*num+1].y = radio;break;
       case SEMIESFERA: vertices[num_aux*num+1].y = radio;break;
       case CONO:       vertices[num_aux*num+1].y = perfil[1].y;break;
-      case ESFERA:     vertices[num_aux*num+1].y = radio;break;
       default:         vertices[num_aux*num+1].y = perfil[num_aux-1].y;break;
     }
 
@@ -594,44 +585,43 @@ glPopMatrix();
 };
 
 _cabezaR::_cabezaR(){
-  // perfil para semicirculo
 
 }
 
 void _cabezaR::draw( _modo modo, float grosor, _opcion &x){
   //CABEZA
   glPushMatrix();
-  glTranslatef(0, 2.5,0);
+  glTranslatef(0, 0,0);
   glScalef(0.9,0.9,0.7);  //Modificar anchura de cabeza!!!
   cabeza.draw(modo, grosor, x);
   glPopMatrix();
 
   //OJOS
   glPushMatrix();
-  glTranslatef(0.5,3.5,1);
-  glRotatef(-30,1,0,0);
+  glTranslatef(0.5,1.2,0.9);
+  glRotatef(-35,1,0,0);
   glScalef(0.1,0.2,0.1);
   ojo_derecho.draw(modo, grosor,x);
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(-0.5,3.5,1);
-  glRotatef(-30,1,0,0);
+  glTranslatef(-0.5,1.2,0.9);
+  glRotatef(-35,1,0,0);
   glScalef(0.1,0.2,0.1);
   ojo_izquierdo.draw(modo, grosor, x);
   glPopMatrix();
 
   //OREJAS
   glPushMatrix();
-  glTranslatef(1.5,3,0);
-  glRotatef(-75.0,0,0,1);
+  glTranslatef(1.06,1,0);
+  glRotatef(-50.0,0,0,1);
   glScalef(0.2,0.2,0.2);
   oreja_derecha.draw(modo, grosor,x);
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(-1.5,3,0);
-  glRotatef(75.0,0,0,1);
+  glTranslatef(-1.06,1,0);
+  glRotatef(50.0,0,0,1);
   glScalef(0.2,0.2,0.2);
   oreja_derecha.draw(modo, grosor,x);
   glPopMatrix();
@@ -640,11 +630,79 @@ void _cabezaR::draw( _modo modo, float grosor, _opcion &x){
 
 _torsoR::_torsoR(){
 
-}
+};
 
 void _torsoR::draw(_modo modo, float grosor, _opcion &x){
   glPushMatrix();
   glScalef(2.5,1,1);
   torso.draw(modo, grosor, x);
+  glPopMatrix();
+}
+
+_brazoR::_brazoR(){
+  //Perfil para un cilindro asimetrico
+  vector<_vertex3f> perfil;
+  _vertex3f aux;
+  aux.x=0.107;aux.y=-0.5;aux.z=0.0;
+  perfil.push_back(aux);
+  aux.x=0.050;aux.y=0.5;aux.z=0.0;
+  perfil.push_back(aux);
+  brazo.parametros(perfil,12, CILINDRO, true, true);
+};
+
+void _brazoR::draw(_modo modo, float grosor, _opcion &x){
+  //BRAZO
+  glPushMatrix();
+  glTranslatef(0,-1,0);
+  glScalef(2.5,2,2);
+  brazo.draw(modo, grosor, x);
+  glPopMatrix();
+
+  //MANO
+  glPushMatrix();
+  glTranslatef(0,-2,0);
+  glScalef(0.09,0.09,0.09);
+  mano.draw(modo, grosor, x);
+  glPopMatrix();
+}
+
+_piernaR::_piernaR(){};
+
+void _piernaR::draw(_modo modo, float grosor, _opcion &x){
+  //PIERNA
+  glPushMatrix();
+  glTranslatef(0,-2,0);
+  glScalef(0.07,1,0.07);
+  pierna.draw(modo, grosor, x);
+  glPopMatrix();
+
+  //PIE
+  glPushMatrix();
+  glTranslatef(0,-2,0);
+  glScalef(0.15,0.09,0.15);
+  pie.draw(modo, grosor, x);
+  glPopMatrix();
+
+  //DEDO1
+  glPushMatrix();
+  glTranslatef(0.25,-2,0);
+  glRotatef(45.0,0,1,0);
+  glScalef(0.07,0.07,0.15);
+  dedo1.draw(modo, grosor, x);
+  glPopMatrix();
+
+  //DEDO2
+  glPushMatrix();
+  glTranslatef(0,-2,0.25);
+  glScalef(0.07,0.07,0.15);
+  dedo2.draw(modo, grosor, x);
+  glPopMatrix();
+
+  //DEDO3
+  glPushMatrix();
+  glTranslatef(-0.25,-2,0);
+  glRotatef(-45.0,0,1,0);
+  glScalef(0.07,0.07,0.15);
+  dedo3.draw(modo, grosor, x);
   glPopMatrix();
 }

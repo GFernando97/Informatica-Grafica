@@ -201,41 +201,12 @@ _torreta  torreta;
 _tubo     tubo;
 };
 
-/*
+
 //************************************************************************
 // objeto articulado: Robot
 //************************************************************************
-class _robot:public _triangulos3D{
-public:
-  _robot();
-  void draw(_modo modo, float grosor, _opcion &x);
-
-  float giro_cabeza;
-
-  float giro_mano_izquierda;
-  float giro_mano_derecha;
-
-  float giro_pie_izquierdo;
-  float giro_pie_derecho;
-
-protected:
-  _cabezaR cabeza;
-  _torsoR torso;
-  _brazoR brazoDerecho;
-  _brazoR brazoIzquierdo;
-  _piernaR piernaDerecha;
-  _piernaR piernaIzquierda;
-}
-
-class _cabezaR: public _triangulos3D{
-  public:
-    _cabezaR();
-    void draw(_modo modo, float grosor, _opcion &x);
 
 
-}
-
-*/
 class _cabezaR:public _triangulos3D{
 public:
   _cabezaR();
@@ -258,112 +229,53 @@ protected:
   _esfera torso;
 };
 
+class _brazoR:public _triangulos3D{
+public:
+  _brazoR();
+  void draw(_modo modo, float grosor, _opcion &x);
 
+protected:
+  _rotacion brazo;
+  _esfera mano;
 
-/*
-//************************************************************************
-// objeto articulado: tanque
-//************************************************************************
-
-_chasis::_chasis()
-{
-// perfil para un cilindro
-vector<_vertex3f> perfil;
-_vertex3f aux;
-aux.x=0.107;aux.y=-0.5;aux.z=0.0;
-perfil.push_back(aux);
-aux.x=0.107;aux.y=0.5;aux.z=0.0;
-perfil.push_back(aux);
-rodamiento.parametros(perfil,12, CILINDRO, true, true);
-altura=0.22;
 };
 
-void _chasis::draw(_modo modo, float grosor,  _opcion &x)
-{
-glPushMatrix();
-glScalef(1.0,0.22,0.95);
-base.draw(modo, grosor, x);
-glPopMatrix();
-
-glPushMatrix();
-glRotatef(90.0,1,0,0);
-rodamiento.draw(modo,  grosor, x);
-glPopMatrix();
-
-glPushMatrix();
-glTranslatef(-0.25,0.0,0.0);
-glRotatef(90.0,1,0,0);
-rodamiento.draw(modo,  grosor, x);
-glPopMatrix();
-
-glPushMatrix();
-glTranslatef(-0.5,0.0,0.0);
-glRotatef(90.0,1,0,0);
-rodamiento.draw(modo,  grosor, x);
-glPopMatrix();
-
-glPushMatrix();
-glTranslatef(0.25,0.0,0.0);
-glRotatef(90.0,1,0,0);
-rodamiento.draw(modo,  grosor, x);
-glPopMatrix();
-
-glPushMatrix();
-glTranslatef(0.5,0.0,0.0);
-glRotatef(90.0,1,0,0);
-rodamiento.draw(modo,  grosor, x);
-glPopMatrix();
-}
-
-//************************************************************************
-
-_torreta::_torreta()
-{
-altura=0.18;
-anchura=0.65;
+class _piernaR:public _triangulos3D{
+public:
+  _piernaR();
+  void draw(_modo modo, float grosor, _opcion &x);
+protected:
+  _cilindro pierna;
+  _esfera pie;
+  _esfera dedo1;
+  _esfera dedo2;
+  _esfera dedo3;
 };
 
-void _torreta::draw(_modo modo, float grosor,  _opcion &x)
-{
-glPushMatrix();
-glScalef(0.65,0.18,0.6);
-base.draw(modo,  grosor, x);
-glPopMatrix();
 
-glPushMatrix();
-glTranslatef(-0.325,0,0);
-glRotatef(90.0,0,0,1);
-glScalef(0.18,0.16,0.6);
-parte_trasera.draw(modo,  grosor, x);
-glPopMatrix();
-}
+class _robot:public _triangulos3D{
+public:
+  _robot();
+  void draw(_modo modo, float grosor, _opcion &x);
 
-//************************************************************************
+  float giro_cabeza;
 
-_tubo::_tubo()
-{
-// perfil para un cilindro
-vector<_vertex3f> perfil;
-_vertex3f aux;
-aux.x=0.04;aux.y=-0.4;aux.z=0.0;
-perfil.push_back(aux);
-aux.x=0.04;aux.y=0.4;aux.z=0.0;
-perfil.push_back(aux);
-tubo_abierto.parametros(perfil,12,CILINDRO, false, false);
+  float giro_mano_izquierda;
+  float giro_mano_derecha;
+
+  float giro_pie_izquierdo;
+  float giro_pie_derecho;
+
+protected:
+  _cabezaR cabeza;
+  _torsoR torso;
+  _brazoR brazoDerecho;
+  _brazoR brazoIzquierdo;
+  _piernaR piernaDerecha;
+  _piernaR piernaIzquierda;
 };
 
-void _tubo::draw(_modo modo, float grosor, _opcion &x)
-{
-
-glPushMatrix();
-glTranslatef(0.4,0,0);
-glRotatef(90.0,0,0,1);
-tubo_abierto.draw(modo,  grosor, x);
-glPopMatrix();
-}
-
-
-//************************************************************************
+/************************************************************************
 
 _tanque::_tanque()
 {
@@ -392,5 +304,5 @@ glPopMatrix();
 glPopMatrix();
 
 };
-*/
 
+*/
