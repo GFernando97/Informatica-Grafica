@@ -116,6 +116,14 @@ void _triangulos3D::draw_solido_ajedrez(){
 
 void _triangulos3D::draw(_modo modo, float grosor, _opcion &x){
   if(x==COLORPICKER) colorPicker();
+  else if(x==UNIQUECOLOR){
+    color1._0=0; 
+    color1._1=0; 
+    color1._2=0;
+    color2._0=0; 
+    color2._1=0; 
+    color2._2=0; 
+  }
 
   switch (modo){
   	case POINTS:draw_puntos(grosor);break;
@@ -589,6 +597,7 @@ _cabezaR::_cabezaR(){
 }
 
 void _cabezaR::draw( _modo modo, float grosor, _opcion &x){
+  _opcion opcionUnicaColor=UNIQUECOLOR;
   //CABEZA
   glPushMatrix();
   glTranslatef(0, 0,0);
@@ -601,14 +610,14 @@ void _cabezaR::draw( _modo modo, float grosor, _opcion &x){
   glTranslatef(0.5,1.2,0.9);
   glRotatef(-35,1,0,0);
   glScalef(0.1,0.2,0.1);
-  ojo_derecho.draw(modo, grosor,x);
+  ojo_derecho.draw(modo, grosor,opcionUnicaColor);
   glPopMatrix();
 
   glPushMatrix();
   glTranslatef(-0.5,1.2,0.9);
   glRotatef(-35,1,0,0);
   glScalef(0.1,0.2,0.1);
-  ojo_izquierdo.draw(modo, grosor, x);
+  ojo_izquierdo.draw(modo, grosor, opcionUnicaColor);
   glPopMatrix();
 
   //OREJAS
@@ -634,7 +643,7 @@ _torsoR::_torsoR(){
 
 void _torsoR::draw(_modo modo, float grosor, _opcion &x){
   glPushMatrix();
-  glScalef(2.5,1,1);
+  glScalef(0.75,1,1);
   torso.draw(modo, grosor, x);
   glPopMatrix();
 }
@@ -706,3 +715,75 @@ void _piernaR::draw(_modo modo, float grosor, _opcion &x){
   dedo3.draw(modo, grosor, x);
   glPopMatrix();
 }
+
+
+_robot::_robot(){
+  giro_cabeza=0;
+  giro_mano_izquierda=0;
+  giro_mano_derecha=0;
+  giro_pie_izquierdo=0;
+  giro_pie_derecho=0;
+};
+
+
+
+void _robot::draw(_modo modo, float grosor, _opcion &x){
+
+  giro_cabeza=(int)giro_cabeza%360;
+  giro_mano_izquierda=(int)giro_mano_izquierda%360;
+  giro_mano_derecha=(int)giro_mano_derecha%360;
+  giro_pie_derecho=(int)giro_pie_derecho%360;
+  giro_pie_izquierdo=(int)giro_pie_izquierdo%360;
+
+
+  //cabeza
+  glPushMatrix();
+  glTranslatef(0,0.8,0);
+  glRotatef(giro_cabeza,0,1,0);
+  glScalef(0.45,0.45,0.45);
+  cabeza.draw(modo, grosor, x);
+  glPopMatrix();
+
+  //Torso
+  glPushMatrix();
+  glTranslatef(0,0,0);
+  glScalef(0.60,0.5,0.40);
+  torso.draw(modo, grosor, x);
+  glPopMatrix();
+
+  //Brazo Derecho
+  glPushMatrix();
+  glTranslatef(0.6,0.6,0);
+  glRotatef(giro_mano_derecha,1,0,0);
+  glRotatef(45.0,0,0,1);
+  glScalef(0.75,0.50,0.75);
+  brazoDerecho.draw(modo, grosor, x);
+  glPopMatrix();
+
+  //Brazo Izquierdo
+  glPushMatrix();
+  glTranslatef(-0.6,0.6,0);
+  glRotatef(giro_mano_izquierda,1,0,0);
+  glRotatef(-45.0,0,0,1);
+  glScalef(0.75,0.50,0.75);
+  brazoIzquierdo.draw(modo, grosor, x);
+  glPopMatrix();
+
+  //Pierna Izquierda
+  glPushMatrix();
+  glTranslatef(-0.5,-0.25,0);
+  glRotatef(giro_pie_izquierdo,1,0,0);
+  glScalef(0.80,0.50,0.80);
+  piernaIzquierda.draw(modo, grosor, x);
+  glPopMatrix();
+
+  //Pierna Derecha
+  glPushMatrix();
+  glTranslatef(0.5,-0.25,0);
+  glRotatef(giro_pie_derecho,1,0,0);
+  glScalef(0.95,0.50,0.95);
+  piernaDerecha.draw(modo, grosor, x);
+  glPopMatrix();
+}
+
+

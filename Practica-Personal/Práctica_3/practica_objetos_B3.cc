@@ -26,6 +26,10 @@ GLfloat Size_x,Size_y,Front_plane,Back_plane;
 // variables que determninan la posicion y tamaño de la ventana X
 int Window_x=50,Window_y=50,Window_width=450,Window_high=450;
 
+// variables que determinan la velocidad de las modificaciónes del modelo jerárquico
+int v_giro_cabeza = 5;
+int v_giro_brazos = 5;
+int v_giro_piernas = 5;
 
 // objetos
 _cubo cubo;
@@ -37,6 +41,7 @@ _cilindro cilindro;
 _cono cono;
 _copa copa;
 _tanque tanque;
+_robot robot;
 //Ejemplos: Borrar despues
 _semiesfera semiesfera;
 _cabezaR cabeza;
@@ -123,7 +128,7 @@ switch (t_objeto){
 	case CUBO: cubo.draw(modo,2,opcion);break;
 	case PIRAMIDE: piramide.draw(modo,2,opcion);break;
         case OBJETO_PLY: ply.draw(modo,2,opcion);break;
-        case ESFERA: cabeza.draw(modo,2,opcion);break;
+        case ESFERA: robot.draw(modo,2,opcion);break;
         case CONO: cono.draw(modo,2,opcion);break;
         case CILINDRO: cilindro.draw(modo,2,opcion);break;
         case GENERICO: copa.draw(modo,2,opcion);break;
@@ -197,6 +202,19 @@ switch (toupper(Tecla1)){
     case 'X':opcion=COLORPICKER;break;
     case 'G':t_objeto=GENERICO;break;
     case 'T':t_objeto=ARTICULADO;break;
+
+    //Movimientos
+    case 'W': robot.giro_cabeza += v_giro_cabeza; break;
+    case 'E': robot.giro_cabeza -= v_giro_cabeza; break;
+    case 'H': robot.giro_mano_izquierda += v_giro_brazos; break;
+    case 'J': robot.giro_mano_izquierda -= v_giro_brazos; break;
+    case 'K': robot.giro_mano_derecha += v_giro_brazos; break;
+    case 'L': robot.giro_mano_derecha -= v_giro_brazos; break;
+    case 'V': robot.giro_pie_derecho -= v_giro_piernas; break;
+    case 'B': robot.giro_pie_derecho += v_giro_piernas; break;
+    case 'N': robot.giro_pie_izquierdo -= v_giro_piernas; break;
+    case 'M': robot.giro_pie_izquierdo += v_giro_piernas; break; 
+  
 	}
 glutPostRedisplay();
 }
@@ -281,35 +299,6 @@ int main(int argc, char *argv[] )
 
 
 
-// perfil 
-/*
-vector<_vertex3f> perfil2;
-_vertex3f aux;
-
-aux.x=1.0;aux.y=-1.4;aux.z=0.0;
-perfil2.push_back(aux);
-aux.x=1.0;aux.y=-1.1;aux.z=0.0;
-perfil2.push_back(aux);
-aux.x=0.5;aux.y=-0.7;aux.z=0.0;
-perfil2.push_back(aux);
-aux.x=0.4;aux.y=-0.4;aux.z=0.0;
-perfil2.push_back(aux);
-aux.x=0.4;aux.y=0.5;aux.z=0.0;
-perfil2.push_back(aux);
-aux.x=0.5;aux.y=0.6;aux.z=0.0;
-perfil2.push_back(aux);
-aux.x=0.3;aux.y=0.6;aux.z=0.0;
-perfil2.push_back(aux);
-aux.x=0.5;aux.y=0.8;aux.z=0.0;
-perfil2.push_back(aux);
-aux.x=0.55;aux.y=1.0;aux.z=0.0;
-perfil2.push_back(aux);
-aux.x=0.5;aux.y=1.2;aux.z=0.0;
-perfil2.push_back(aux);
-aux.x=0.3;aux.y=1.4;aux.z=0.0;
-perfil2.push_back(aux);
-rotacion.parametros(perfil2,6,GENERICO, true,true);
-*/
 // se llama a la inicialización de glut
 glutInit(&argc, argv);
 

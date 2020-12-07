@@ -10,7 +10,7 @@
 
 
 const float AXIS_SIZE=5000;
-typedef enum{COLORPICKER, NO_OPTION} _opcion;
+typedef enum{COLORPICKER, NO_OPTION, UNIQUECOLOR} _opcion;
 typedef enum{POINTS,EDGES,SOLID_CHESS,SOLID} _modo;
 typedef enum{CUBO, PIRAMIDE, OBJETO_PLY, ESFERA, SEMIESFERA, CONO, CILINDRO, GENERICO, ARTICULADO} _tipo_objeto;
 
@@ -275,34 +275,3 @@ protected:
   _piernaR piernaIzquierda;
 };
 
-/************************************************************************
-
-_tanque::_tanque()
-{
-giro_tubo=2.0;
-giro_torreta=0.0;
-giro_tubo_min=-9;
-giro_tubo_max=20;
-};
-
-void _tanque::draw(_modo modo, float grosor,  _opcion &x)
-{
-glPushMatrix();
-chasis.draw(modo,  grosor, x);
-
-glRotatef(giro_torreta,0,1,0);
-glPushMatrix();
-glTranslatef(0.0,(chasis.altura+torreta.altura)/2.0,0.0);
-torreta.draw(modo,  grosor, x);
-glPopMatrix();
-
-glPushMatrix();
-glTranslatef(torreta.anchura/2.0,(chasis.altura+torreta.altura)/2.0,0.0);
-glRotatef(giro_tubo,0,0,1);
-tubo.draw(modo,  grosor, x);
-glPopMatrix();
-glPopMatrix();
-
-};
-
-*/
