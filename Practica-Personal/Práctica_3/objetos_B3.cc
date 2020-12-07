@@ -732,8 +732,8 @@ void _robot::draw(_modo modo, float grosor, _opcion &x){
   giro_cabeza=(int)giro_cabeza%360;
   giro_mano_izquierda=(int)giro_mano_izquierda%360;
   giro_mano_derecha=(int)giro_mano_derecha%360;
-  giro_pie_derecho=(int)giro_pie_derecho%360;
-  giro_pie_izquierdo=(int)giro_pie_izquierdo%360;
+  giro_pie_derecho=(int)giro_pie_derecho%70;
+  giro_pie_izquierdo=(int)giro_pie_izquierdo%70;
 
 
   //cabeza

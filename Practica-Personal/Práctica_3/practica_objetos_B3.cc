@@ -128,11 +128,11 @@ switch (t_objeto){
 	case CUBO: cubo.draw(modo,2,opcion);break;
 	case PIRAMIDE: piramide.draw(modo,2,opcion);break;
         case OBJETO_PLY: ply.draw(modo,2,opcion);break;
-        case ESFERA: robot.draw(modo,2,opcion);break;
+        case ESFERA: esfera.draw(modo,2,opcion);break;
         case CONO: cono.draw(modo,2,opcion);break;
         case CILINDRO: cilindro.draw(modo,2,opcion);break;
         case GENERICO: copa.draw(modo,2,opcion);break;
-        case ARTICULADO: tanque.draw(modo,2,opcion);break;
+        case ARTICULADO: robot.draw(modo,2,opcion);break;
 	}
 	opcion=NO_OPTION;
 
