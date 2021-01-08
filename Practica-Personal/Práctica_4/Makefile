@@ -6,7 +6,7 @@ TARGETS= practica_objetos_B3
 
 # banderas para el compilador (C y C++). Se indican los directorios donde se puenden
 # encontrar ficheros para incluir mediante la opcion -I
-# la opcion -g sirve para permitir la depuración
+# la opcion -g sirve para permitir la depuraciÃ³n
 #
 CFLAGS=    -g -DXWINDOWS -DSHM -I/usr/include -I.
 CXXFLAGS=  -g -DXWINDOWS -DSHM -I/usr/include -I.
@@ -56,4 +56,3 @@ tgz:
 	rm *~
 	rm -f $(TARGETS)
 	tar -zcvf $(TARGETS).tgz *
-

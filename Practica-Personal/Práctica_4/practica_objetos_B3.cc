@@ -40,13 +40,8 @@ _esfera esfera;
 _cilindro cilindro;
 _cono cono;
 _copa copa;
-_tanque tanque;
 _robot robot;
-//Ejemplos: Borrar despues
-_semiesfera semiesfera;
-_cabezaR cabeza;
-_brazoR brazo;
-_piernaR pierna;
+
 // _objeto_ply *ply1;
 
  float alfa=0.0;
@@ -123,7 +118,8 @@ glEnd();
 
 void luces(float alfa, float beta){
     GLfloat luz_ambiente [ ] = {0.3,0.3,0.3,1.0};
-    GLfloat luz1 [ ] = {1.0,1.0,1.0,1.0};
+    //GLfloat luz1 [ ] = {1.0,1.0,1.0,1.0};
+    GLfloat luz1 [ ] = {0.4,0.6,0.2,0.0};
     //GLfloat luz2 [ ] = {0.2,1.0,0.5,1.0};
     GLfloat posicion1 [ ] = {50.0,50.0,0.0,1.0};
     GLfloat posicion2 [ ] = {-50.0,50.0,0.0,1.0};
@@ -134,7 +130,7 @@ void luces(float alfa, float beta){
 
     glPushMatrix();
     glRotatef(alfa,0,1,0);
-    glTranslatef(0,beta,0);
+    glTranslatef(beta,0,0);
     glLightfv (GL_LIGHT1, GL_POSITION, posicion1);
     glPopMatrix();
    
@@ -223,33 +219,37 @@ void normal_key(unsigned char Tecla1,int x,int y)
 {
 switch (toupper(Tecla1)){
 	case 'Q':exit(0);
+
+    //Modo Dibujado
 	case '1':modo=POINTS;break;
 	case '2':modo=EDGES;break;
 	case '3':modo=SOLID;break;
 	case '4':modo=SOLID_CHESS;break;
     case '5':modo=SOLID_ILUMINATED_FLAT;break;
     case '6':modo=SOLID_ILUMINATED_GOURAUD;break;
-    case 'P':t_objeto=PIRAMIDE;break;
-    case 'C':t_objeto=CUBO;break;
-    case 'O':t_objeto=OBJETO_PLY;break;	
-    case 'A':t_objeto=ESFERA;break;
-    case 'S':t_objeto=CILINDRO;break;
-    case 'D':t_objeto=CONO;break;
-    case 'X':opcion=COLORPICKER;break;
+    case '7':opcion=COLORPICKER;break;
+
+    //Objetos
+    case 'A':t_objeto=ARTICULADO;break;
+    case 'S':t_objeto=PIRAMIDE;break;
+    case 'D':t_objeto=CUBO;break;
+    case 'F':t_objeto=OBJETO_PLY;break;	
     case 'G':t_objeto=GENERICO;break;
-    case 'T':t_objeto=ARTICULADO;break;
+    case 'H':t_objeto=CILINDRO;break;
+    case 'J':t_objeto=ESFERA;break;
+    case 'K':t_objeto=CONO;break;
 
     //Movimientos
     case 'W': robot.giro_cabeza += v_giro_cabeza; break;
     case 'E': robot.giro_cabeza -= v_giro_cabeza; break;
-    case 'H': robot.giro_mano_izquierda += v_giro_brazos; break;
-    case 'J': robot.giro_mano_izquierda -= v_giro_brazos; break;
-    case 'K': robot.giro_mano_derecha += v_giro_brazos; break;
-    case 'L': robot.giro_mano_derecha -= v_giro_brazos; break;
-    case 'V': robot.giro_pie_derecho -= v_giro_piernas; break;
-    case 'B': robot.giro_pie_derecho += v_giro_piernas; break;
-    case 'N': robot.giro_pie_izquierdo -= v_giro_piernas; break;
-    case 'M': robot.giro_pie_izquierdo += v_giro_piernas; break; 
+    case 'R': robot.giro_mano_izquierda += v_giro_brazos; break;
+    case 'T': robot.giro_mano_izquierda -= v_giro_brazos; break;
+    case 'Y': robot.giro_mano_derecha += v_giro_brazos; break;
+    case 'U': robot.giro_mano_derecha -= v_giro_brazos; break;
+    case 'I': robot.giro_pie_derecho -= v_giro_piernas; break;
+    case 'O': robot.giro_pie_derecho += v_giro_piernas; break;
+    case 'Z': robot.giro_pie_izquierdo -= v_giro_piernas; break;
+    case 'X': robot.giro_pie_izquierdo += v_giro_piernas; break; 
   
 	}
 glutPostRedisplay();
@@ -275,14 +275,6 @@ switch (Tecla1){
 	case GLUT_KEY_DOWN:Observer_angle_x++;break;
 	case GLUT_KEY_PAGE_UP:Observer_distance*=1.2;break;
 	case GLUT_KEY_PAGE_DOWN:Observer_distance/=1.2;break;
-        case GLUT_KEY_F1:tanque.giro_tubo+=1;
-                         if (tanque.giro_tubo>tanque.giro_tubo_max) tanque.giro_tubo=tanque.giro_tubo_max;
-                         break;
-        case GLUT_KEY_F2:tanque.giro_tubo-=1;
-                         if (tanque.giro_tubo<tanque.giro_tubo_min) tanque.giro_tubo=tanque.giro_tubo_min;
-                         break;break;
-        case GLUT_KEY_F3:tanque.giro_torreta+=5;break;
-        case GLUT_KEY_F4:tanque.giro_torreta-=5;break;
         case GLUT_KEY_F5:alfa+=5;break;
         case GLUT_KEY_F6:alfa-=5;break;
         case GLUT_KEY_F7:beta+=5;break;
