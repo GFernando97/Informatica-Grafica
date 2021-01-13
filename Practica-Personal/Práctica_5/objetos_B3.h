@@ -24,7 +24,7 @@ public:
 
   
   _puntos3D();
-void  draw_puntos(int grosor);
+void  draw_puntos(int grosor,float color);
 void  colorPicker();
 
 vector<_vertex3f> vertices;
@@ -42,11 +42,11 @@ class _triangulos3D: public _puntos3D
 public:
 
   _triangulos3D();
-void  draw_aristas(int grosor);
-void  draw_solido();
-void  draw_solido_ajedrez();
+void  draw_aristas(int grosor, float color);
+void  draw_solido(float color);
+void  draw_solido_ajedrez(float color);
 void  draw_seleccion(float color);
-void  draw(_modo modo, float grosor, _opcion &x, float color_r=0, float color_g=0, float color_b=0);
+void  draw(_modo modo, float grosor, _opcion &x, float color=0);
 
 vector<_vertex3i> caras;
 };
@@ -145,7 +145,7 @@ public:
 class _cabezaR:public _triangulos3D{
 public:
   _cabezaR();
-  void draw(_modo modo, float grosor, _opcion &x, float color_r=0, float color_g=0, float color_b=0);
+  void draw(_modo modo, float grosor, _opcion &x, float color=0);
 
 protected:
   _semiesfera cabeza;
@@ -159,7 +159,7 @@ protected:
 class _torsoR:public _triangulos3D{
 public:
   _torsoR();
-  void draw(_modo modo, float grosor, _opcion &x, float color_r=0, float color_g=0, float color_b=0);
+  void draw(_modo modo, float grosor, _opcion &x, float color=0);
 protected:
   _esfera torso;
 };
@@ -167,7 +167,7 @@ protected:
 class _brazoR:public _triangulos3D{
 public:
   _brazoR();
-  void draw(_modo modo, float grosor, _opcion &x, float color_r=0, float color_g=0, float color_b=0);
+  void draw(_modo modo, float grosor, _opcion &x, float color=0);
 
 protected:
   _rotacion brazo;
@@ -178,7 +178,7 @@ protected:
 class _piernaR:public _triangulos3D{
 public:
   _piernaR();
-  void draw(_modo modo, float grosor, _opcion &x, float color_r=0, float color_g=0, float color_b=0);
+  void draw(_modo modo, float grosor, _opcion &x, float color=0);
 protected:
   _cilindro pierna;
   _esfera pie;
@@ -191,8 +191,8 @@ protected:
 class _robot:public _triangulos3D{
 public:
   _robot();
-  void draw(_modo modo, float grosor, _opcion &x, float color_r=0, float color_g=0, float color_b=0);
-  void seleccion(float color, float grosor, _opcion x); 
+  void draw(_modo modo, float grosor, _opcion &x, float color=0);
+  void seleccion(float color); 
   float giro_cabeza;
 
   float giro_mano_izquierda;
@@ -203,7 +203,7 @@ public:
 
   int activo[6];
   int cambiar[6];
-  float color_r, color_g, color_b;
+  
 
 protected:
   _cabezaR cabeza;

@@ -41,7 +41,10 @@ _cilindro cilindro;
 _cono cono;
 _copa copa;
 _robot robot;
-//Ejemplos: Borrar despues
+
+int estadoRaton[3], xc, yc;
+
+void pick_color(int x, int y);
 
 
 
@@ -152,7 +155,7 @@ if(t_objeto==ARTICULADO){
     glDrawBuffer(GL_BACK);
     clean_window();
     change_observer();
-    robot.seleccion(50, 0.5, NO_OPTION);
+    robot.seleccion(100);
 }
 
 glFlush();
@@ -161,7 +164,7 @@ glFlush();
 
 
 //***************************************************************************
-// Funcion llamada cuando se produce un cambio en el tamaño de la ventana
+// Funcion llamada cuando se produce un robot.cambiar[] en el tamaño de la ventana
 //
 // el evento manda a la funcion:
 // nuevo ancho
@@ -251,6 +254,154 @@ glutPostRedisplay();
 
 
 //***************************************************************************
+// Funciones para manejo de eventos del ratón
+//***************************************************************************
+
+void clickRaton( int boton, int estado, int x, int y )
+{
+if(boton== GLUT_RIGHT_BUTTON) {
+   if( estado == GLUT_DOWN) {
+      estadoRaton[2] = 1;
+      xc=x;
+      yc=y;
+     } 
+   else estadoRaton[2] = 1;
+   }
+if(boton== GLUT_LEFT_BUTTON) {
+  if( estado == GLUT_DOWN) {
+      estadoRaton[2] = 2;
+      xc=x;
+      yc=y;
+      pick_color(xc, yc);
+    } 
+  }
+}
+
+/*************************************************************************/
+
+void getCamara (GLfloat *x, GLfloat *y)
+{
+*x=Observer_angle_x;
+*y=Observer_angle_y;
+}
+
+/*************************************************************************/
+
+void setCamara (GLfloat x, GLfloat y)
+{
+Observer_angle_x=x;
+Observer_angle_y=y;
+}
+
+
+
+/*************************************************************************/
+
+void RatonMovido( int x, int y )
+{ 
+float x0, y0, xn, yn; 
+if(estadoRaton[2]==1) 
+    {getCamara(&x0,&y0);
+     yn=y0+(y-yc);
+     xn=x0-(x-xc);
+     setCamara(xn,yn);
+     xc=x;
+     yc=y;
+     glutPostRedisplay();
+    }
+}
+
+
+
+void procesar_color(unsigned char color[3])
+{
+
+ 
+ switch (color[0])
+      {case 100: 
+                 if (robot.activo[0]==0) 
+                      {robot.activo[0]=1;
+                       robot.cambiar[0]=1;
+                      }
+                  else 
+                      {robot.activo[0]=0;
+                       robot.cambiar[0]=0;
+                      }
+                  break; 
+        case 120:
+                  if (robot.activo[1]==0) 
+                       {robot.activo[1]=1;
+                        robot.cambiar[1]=1;
+                       }
+                  else 
+                       {robot.activo[1]=0;
+                        robot.cambiar[1]=0;
+                       } 
+                  break;
+        case 140: 
+                  if (robot.activo[2]==0) 
+                       {robot.activo[2]=1;
+                        robot.cambiar[2]=1;
+                       }
+                  else 
+                       {robot.activo[2]=0;
+                        robot.cambiar[2]=0;
+                       }
+                  break; 
+        case 160: 
+                  if (robot.activo[3]==0) 
+                       {robot.activo[3]=1;
+                        robot.cambiar[3]=1;
+                       }
+                  else 
+                       {robot.activo[3]=0;
+                        robot.cambiar[3]=0;
+                       }
+                  break;
+        case 180: 
+                  if (robot.activo[4]==0) 
+                       {robot.activo[4]=1;
+                        robot.cambiar[4]=1;
+                       }
+                  else 
+                       {robot.activo[4]=0;
+                        robot.cambiar[4]=0;
+                       }
+                  break;
+                 
+
+        case 200: 
+                  if (robot.activo[5]==0) 
+                       {robot.activo[5]=1;
+                        robot.cambiar[5]=1;
+                       }
+                  else 
+                       {robot.activo[5]=0;
+                        robot.cambiar[5]=0;
+                       }
+                  break;
+    }         
+                           
+ }
+
+
+
+void pick_color(int x, int y)
+{
+GLint viewport[4];
+unsigned char pixel[3];
+
+glGetIntegerv(GL_VIEWPORT, viewport);
+glReadBuffer(GL_BACK);
+glReadPixels(x,viewport[3]-y,1,1,GL_RGB,GL_UNSIGNED_BYTE,(GLubyte *) &pixel[0]);
+printf(" valor x %d, valor y %d, color %d, %d, %d \n",x,y,pixel[0],pixel[1],pixel[2]);
+
+procesar_color(pixel);
+glutPostRedisplay();
+}
+
+
+//***************************************************************************
 // Funcion de incializacion
 //***************************************************************************
 
@@ -328,6 +479,11 @@ glutReshapeFunc(change_window_size);
 glutKeyboardFunc(normal_key);
 // asignación de la funcion llamada "tecla_Especial" al evento correspondiente
 glutSpecialFunc(special_key);
+
+
+// eventos ratón
+    glutMouseFunc( clickRaton );
+    glutMotionFunc( RatonMovido );
 
 // funcion de inicialización
 initialize();

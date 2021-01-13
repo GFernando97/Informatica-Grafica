@@ -18,22 +18,14 @@ _puntos3D::_puntos3D()
 // dibujar puntos
 //*************************************************************************
 
-void _puntos3D::draw_puntos(int grosor){
-  /*unsigned int i;
+void _puntos3D::draw_puntos(int grosor, float color){
   glPointSize(grosor);
-  glColor3f(color1._0, color1._1, color1._2);
-  glBegin(GL_POINTS);
-  for (i=0;i<vertices.size();i++){
-  	glVertex3fv((GLfloat *) &vertices[i]);
-  	}
-  glEnd();*/
-  glPointSize(grosor);
-  glColor3f(color1._0, color1._1, color1._2);
+  if(color==0) glColor3f(color1._0, color1._1, color1._2);
+  else glColor3ub(color, color, color);
 
   glEnableClientState(GL_VERTEX_ARRAY);
   glVertexPointer(3,GL_FLOAT,0,&vertices[0]);
   glDrawArrays(GL_POINTS,0,vertices.size()); 
-
 }
 
 
@@ -50,39 +42,29 @@ _triangulos3D::_triangulos3D()
 // dibujar en modo arista
 //*************************************************************************
 
-void _triangulos3D::draw_aristas(int grosor){
- /* unsigned int i;
-  glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-  glLineWidth(grosor);
-  glColor3f(color1._0, color1._1, color1._2);
-  glBegin(GL_TRIANGLES);
-  for (i=0;i<caras.size();i++){
-  	glVertex3fv((GLfloat *) &vertices[caras[i]._0]);
-  	glVertex3fv((GLfloat *) &vertices[caras[i]._1]);
-  	glVertex3fv((GLfloat *) &vertices[caras[i]._2]);
-  	}
-  glEnd();*/
+void _triangulos3D::draw_aristas(int grosor, float color){
+
 
   glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
   glLineWidth(grosor);
-  glColor3f(color1._0, color1._1, color1._2);
+  if(color==0) glColor3f(color1._0, color1._1, color1._2);
+  else glColor3ub(color, color, color);
 
   glEnableClientState(GL_VERTEX_ARRAY);
   glVertexPointer(3,GL_FLOAT,0,&vertices[0]);
   glDrawElements(GL_TRIANGLES,caras.size()*3,GL_UNSIGNED_INT,&caras[0]);
-
-
 }
 
 //*************************************************************************
 // dibujar en modo sólido
 //*************************************************************************
 
-void _triangulos3D::draw_solido(){
+void _triangulos3D::draw_solido(float color){
   unsigned int i;
   glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
   glLineWidth(0.7);
-  glColor3f(color1._0, color1._1, color1._2);
+  if(color==0) glColor3f(color1._0, color1._1, color1._2);
+  else glColor3ub(color, color, color);
   glBegin(GL_TRIANGLES);
   for (i=0;i<caras.size();i++){
     glVertex3fv((GLfloat *) &vertices[caras[i]._0]);
@@ -96,13 +78,20 @@ void _triangulos3D::draw_solido(){
 // dibujar en modo sólido con apariencia de ajedrez
 //*************************************************************************
 
-void _triangulos3D::draw_solido_ajedrez(){
+void _triangulos3D::draw_solido_ajedrez(float color){
   int i;
   glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
   glBegin(GL_TRIANGLES);
+
   for (i=0;i<caras.size();i++){
+    if(color!=0){
+      if(i%2==0) glColor3ub(color, color, color);
+      else glColor3ub(color-40, color-40, color-40);
+    }
+    else{
     if (i%2==0) glColor3f(color1._0, color1._1, color1._2);
     else glColor3f(color2._0, color2._1, color2._2);
+    }
     glVertex3fv((GLfloat *) &vertices[caras[i]._0]);
     glVertex3fv((GLfloat *) &vertices[caras[i]._1]);
     glVertex3fv((GLfloat *) &vertices[caras[i]._2]);
@@ -132,7 +121,7 @@ void _triangulos3D::draw_seleccion(float color){
 // dibujar con distintos modos
 //*************************************************************************
 
-void _triangulos3D::draw( _modo modo, float grosor, _opcion &x, float color_r, float color_g, float color_b){
+void _triangulos3D::draw( _modo modo, float grosor, _opcion &x, float color){
   if(x==COLORPICKER) colorPicker();
   else if(x==UNIQUECOLOR){
     color1._0=0; 
@@ -144,11 +133,11 @@ void _triangulos3D::draw( _modo modo, float grosor, _opcion &x, float color_r, f
   }
 
   switch (modo){
-  	case POINTS:draw_puntos(grosor);break;
-  	case EDGES:draw_aristas(grosor);break;
-  	case SOLID_CHESS:draw_solido_ajedrez();break;
-  	case SOLID:draw_solido();break;
-    case SELECT:draw_seleccion(color_r);break;
+  	case POINTS:draw_puntos(grosor, color);break;
+  	case EDGES:draw_aristas(grosor, color);break;
+  	case SOLID_CHESS:draw_solido_ajedrez(color);break;
+  	case SOLID:draw_solido(color);break;
+    case SELECT:draw_seleccion(color);break;
   }
 }
 
@@ -322,29 +311,25 @@ _copa::_copa(){
 
 _semiesfera::_semiesfera(float radio, int n_vert, int n_inst){
     vector<_vertex3f> perfil;
-  _vertex3f aux;
+    _vertex3f aux;
 
- for(unsigned int i = 1; i < (unsigned)n_vert;i++){
-    if((radio*sin(M_PI*i/n_vert-M_PI/2.0)) >= 0){
-      aux.x=radio*cos(M_PI*i/n_vert-M_PI/2.0);
-      aux.y=radio*sin(M_PI*i/n_vert-M_PI/2.0);
-      aux.z=0.0;
-      perfil.push_back(aux);
+    for(unsigned int i = 1; i < (unsigned)n_vert;i++){
+      if((radio*sin(M_PI*i/n_vert-M_PI/2.0)) >= 0){
+        aux.x=radio*cos(M_PI*i/n_vert-M_PI/2.0);
+        aux.y=radio*sin(M_PI*i/n_vert-M_PI/2.0);
+        aux.z=0.0;
+        perfil.push_back(aux);
+      }
     }
-  }
 
-  parametros(perfil, n_inst, SEMIESFERA , true, true);
-
+    parametros(perfil, n_inst, SEMIESFERA , true, true);
 }
+
 //*************************************************************************
 // clase objeto ply
 //*************************************************************************
 
-_objeto_ply::_objeto_ply() {
-  // leer lista de coordenadas de vértices y lista de indices de vértices
-
-  //Lista de Coordenadas
-}
+_objeto_ply::_objeto_ply() {}
 
 
 int _objeto_ply::parametros(char *archivo){
@@ -383,9 +368,7 @@ int _objeto_ply::parametros(char *archivo){
 // objeto por revolucion
 //************************************************************************
 
-_rotacion::_rotacion(){
-
-}
+_rotacion::_rotacion(){}
 
 
 void _rotacion::parametros(vector<_vertex3f> perfil, int num, _tipo_objeto tipo, bool tapa_inferior, bool tapa_superior){
@@ -483,17 +466,19 @@ void _rotacion::parametros(vector<_vertex3f> perfil, int num, _tipo_objeto tipo,
 // objeto articulado: Robot
 //************************************************************************
 
-_cabezaR::_cabezaR(){
+_cabezaR::_cabezaR(){}
 
-}
+void _cabezaR::draw( _modo modo, float grosor, _opcion &x, float color){
+  _opcion opcionUnicaColor;
+  if(color!=0) opcionUnicaColor=NO_OPTION;
+  else opcionUnicaColor=UNIQUECOLOR;
 
-void _cabezaR::draw( _modo modo, float grosor, _opcion &x, float color_r, float color_g, float color_b){
-  _opcion opcionUnicaColor=UNIQUECOLOR;
+  
   //CABEZA
   glPushMatrix();
   glTranslatef(0, 0,0);
   glScalef(0.9,0.9,0.7);  //Modificar anchura de cabeza!!!
-  cabeza.draw(modo, grosor, x);
+  cabeza.draw(modo, grosor, x, color);
   glPopMatrix();
 
   //OJOS
@@ -501,14 +486,14 @@ void _cabezaR::draw( _modo modo, float grosor, _opcion &x, float color_r, float 
   glTranslatef(0.5,1.2,0.9);
   glRotatef(-35,1,0,0);
   glScalef(0.1,0.2,0.1);
-  ojo_derecho.draw(modo, grosor,opcionUnicaColor);
+  ojo_derecho.draw(modo, grosor,opcionUnicaColor, color);
   glPopMatrix();
 
   glPushMatrix();
   glTranslatef(-0.5,1.2,0.9);
   glRotatef(-35,1,0,0);
   glScalef(0.1,0.2,0.1);
-  ojo_izquierdo.draw(modo, grosor, opcionUnicaColor);
+  ojo_izquierdo.draw(modo, grosor, opcionUnicaColor, color);
   glPopMatrix();
 
   //OREJAS
@@ -516,26 +501,24 @@ void _cabezaR::draw( _modo modo, float grosor, _opcion &x, float color_r, float 
   glTranslatef(1.06,1,0);
   glRotatef(-50.0,0,0,1);
   glScalef(0.2,0.2,0.2);
-  oreja_derecha.draw(modo, grosor,x);
+  oreja_derecha.draw(modo, grosor,x, color);
   glPopMatrix();
 
   glPushMatrix();
   glTranslatef(-1.06,1,0);
   glRotatef(50.0,0,0,1);
   glScalef(0.2,0.2,0.2);
-  oreja_derecha.draw(modo, grosor,x);
+  oreja_derecha.draw(modo, grosor,x, color);
   glPopMatrix();
-
+  
 }
 
-_torsoR::_torsoR(){
+_torsoR::_torsoR(){}
 
-};
-
-void _torsoR::draw( _modo modo, float grosor, _opcion &x, float color_r, float color_g, float color_b){
+void _torsoR::draw( _modo modo, float grosor, _opcion &x, float color){
   glPushMatrix();
   glScalef(0.75,1,1);
-  torso.draw(modo, grosor, x);
+  torso.draw(modo, grosor, x, color);
   glPopMatrix();
 }
 
@@ -548,39 +531,39 @@ _brazoR::_brazoR(){
   aux.x=0.050;aux.y=0.5;aux.z=0.0;
   perfil.push_back(aux);
   brazo.parametros(perfil,12, CILINDRO, true, true);
-};
+}
 
-void _brazoR::draw( _modo modo, float grosor, _opcion &x, float color_r, float color_g, float color_b){
+void _brazoR::draw( _modo modo, float grosor, _opcion &x, float color){
   //BRAZO
   glPushMatrix();
   glTranslatef(0,-1,0);
   glScalef(2.5,2,2);
-  brazo.draw(modo, grosor, x);
+  brazo.draw(modo, grosor, x, color);
   glPopMatrix();
 
   //MANO
   glPushMatrix();
   glTranslatef(0,-2,0);
   glScalef(0.09,0.09,0.09);
-  mano.draw(modo, grosor, x);
+  mano.draw(modo, grosor, x, color);
   glPopMatrix();
 }
 
-_piernaR::_piernaR(){};
+_piernaR::_piernaR(){}
 
-void _piernaR::draw( _modo modo, float grosor, _opcion &x, float color_r, float color_g, float color_b){
+void _piernaR::draw( _modo modo, float grosor, _opcion &x, float color){
   //PIERNA
   glPushMatrix();
   glTranslatef(0,-2,0);
   glScalef(0.07,1,0.07);
-  pierna.draw(modo, grosor, x);
+  pierna.draw(modo, grosor, x, color);
   glPopMatrix();
 
   //PIE
   glPushMatrix();
   glTranslatef(0,-2,0);
   glScalef(0.15,0.09,0.15);
-  pie.draw(modo, grosor, x);
+  pie.draw(modo, grosor, x, color);
   glPopMatrix();
 
   //DEDO1
@@ -588,14 +571,14 @@ void _piernaR::draw( _modo modo, float grosor, _opcion &x, float color_r, float 
   glTranslatef(0.25,-2,0);
   glRotatef(45.0,0,1,0);
   glScalef(0.07,0.07,0.15);
-  dedo1.draw(modo, grosor, x);
+  dedo1.draw(modo, grosor, x, color);
   glPopMatrix();
 
   //DEDO2
   glPushMatrix();
   glTranslatef(0,-2,0.25);
   glScalef(0.07,0.07,0.15);
-  dedo2.draw(modo, grosor, x);
+  dedo2.draw(modo, grosor, x, color);
   glPopMatrix();
 
   //DEDO3
@@ -603,15 +586,12 @@ void _piernaR::draw( _modo modo, float grosor, _opcion &x, float color_r, float 
   glTranslatef(-0.25,-2,0);
   glRotatef(-45.0,0,1,0);
   glScalef(0.07,0.07,0.15);
-  dedo3.draw(modo, grosor, x);
+  dedo3.draw(modo, grosor, x, color);
   glPopMatrix();
 }
 
 
 _robot::_robot(){
-  color_r=58;
-  color_g=36;
-  color_b=73;
   giro_cabeza=0;
   giro_mano_izquierda=0;
   giro_mano_derecha=0;
@@ -622,11 +602,10 @@ _robot::_robot(){
     activo[i]=0;
     cambiar[i]=0;
   }
-};
+}
 
 
-
-void _robot::draw( _modo modo, float grosor, _opcion &x, float color_r, float color_g, float color_b){
+void _robot::draw( _modo modo, float grosor, _opcion &x, float color){
 
   giro_cabeza=(int)giro_cabeza%360;
   giro_mano_izquierda=(int)giro_mano_izquierda%360;
@@ -634,73 +613,78 @@ void _robot::draw( _modo modo, float grosor, _opcion &x, float color_r, float co
   giro_pie_derecho=(int)giro_pie_derecho%70;
   giro_pie_izquierdo=(int)giro_pie_izquierdo%70;
 
-
   //cabeza
   glPushMatrix();
   glTranslatef(0,0.8,0);
   glRotatef(giro_cabeza,0,1,0);
   glScalef(0.45,0.45,0.45);
-  if(activo[0]==1) cabeza.draw(modo, grosor, x, color_r, color_g, color_b);
+  if(activo[0]==1) cabeza.draw(modo, grosor, x, color);
   else cabeza.draw(modo, grosor, x);
   glPopMatrix();
 
   //Torso
+  color = color+20;
   glPushMatrix();
   glTranslatef(0,0,0);
   glScalef(0.60,0.5,0.40);
-  if(activo[1]==1) torso.draw(modo,grosor, x, color_r, color_g, color_b);
+  if(activo[1]==1) torso.draw(modo,grosor, x, color);
   else torso.draw(modo, grosor, x);
   glPopMatrix();
 
   //Brazo Derecho
+  color = color+20;
   glPushMatrix();
   glTranslatef(0.6,0.6,0);
   glRotatef(giro_mano_derecha,1,0,0);
   glRotatef(45.0,0,0,1);
   glScalef(0.75,0.50,0.75);
-  if(activo[2]==1) brazoDerecho.draw(modo, grosor, x, color_r, color_g, color_b);
+  if(activo[2]==1) brazoDerecho.draw(modo, grosor, x, color);
   else brazoDerecho.draw(modo, grosor, x);
   glPopMatrix();
 
   //Brazo Izquierdo
+  color = color+20;
   glPushMatrix();
   glTranslatef(-0.6,0.6,0);
   glRotatef(giro_mano_izquierda,1,0,0);
   glRotatef(-45.0,0,0,1);
   glScalef(0.75,0.50,0.75);
-  if(activo[3]==1) brazoIzquierdo.draw(modo, grosor, x, color_r, color_g, color_b);
+  if(activo[3]==1) brazoIzquierdo.draw(modo, grosor, x, color);
   else brazoIzquierdo.draw(modo, grosor, x);
   glPopMatrix();
 
   //Pierna Izquierda
+  color = color+20;
   glPushMatrix();
   glTranslatef(-0.5,-0.25,0);
   glRotatef(giro_pie_izquierdo,1,0,0);
   glScalef(0.80,0.50,0.80);
-  if(activo[4]==1) piernaIzquierda.draw(modo, grosor, x, color_r, color_g, color_b);
+  if(activo[4]==1) piernaIzquierda.draw(modo, grosor, x, color);
   else piernaIzquierda.draw(modo, grosor, x);
   glPopMatrix();
 
   //Pierna Derecha
+  color = color+20;
   glPushMatrix();
   glTranslatef(0.5,-0.25,0);
   glRotatef(giro_pie_derecho,1,0,0);
   glScalef(0.95,0.50,0.95);
-  if(activo[5]==1) piernaDerecha.draw(modo, grosor, x, color_r, color_g, color_b);
+  if(activo[5]==1) piernaDerecha.draw(modo, grosor, x, color);
   else piernaDerecha.draw(modo, grosor, x);
   glPopMatrix();
 }
 
 
 
-void _robot::seleccion(float color, float grosor, _opcion x){
+void _robot::seleccion(float color){
+  _opcion opDefault=NO_OPTION;
 
   //cabeza
   glPushMatrix();
   glTranslatef(0,0.8,0);
   glRotatef(giro_cabeza,0,1,0);
   glScalef(0.45,0.45,0.45);
-  cabeza.draw(SELECT, grosor, x, color_r, color_g, color_b);
+  cabeza.draw(SELECT, 1.0, opDefault, color);
   glPopMatrix();
 
   //Torso
@@ -708,7 +692,7 @@ void _robot::seleccion(float color, float grosor, _opcion x){
   glPushMatrix();
   glTranslatef(0,0,0);
   glScalef(0.60,0.5,0.40);
-  torso.draw(SELECT, grosor, x, color_r, color_g, color_b);
+  torso.draw(SELECT, 1.0, opDefault, color);
   glPopMatrix();
 
   //Brazo Derecho
@@ -718,7 +702,7 @@ void _robot::seleccion(float color, float grosor, _opcion x){
   glRotatef(giro_mano_derecha,1,0,0);
   glRotatef(45.0,0,0,1);
   glScalef(0.75,0.50,0.75);
-  brazoDerecho.draw(SELECT, grosor, x, color_r, color_g, color_b);
+  brazoDerecho.draw(SELECT, 1.0, opDefault, color);
   glPopMatrix();
 
   //Brazo Izquierdo
@@ -728,7 +712,7 @@ void _robot::seleccion(float color, float grosor, _opcion x){
   glRotatef(giro_mano_izquierda,1,0,0);
   glRotatef(-45.0,0,0,1);
   glScalef(0.75,0.50,0.75);
-  brazoIzquierdo.draw(SELECT, grosor, x, color_r, color_g, color_b);
+  brazoIzquierdo.draw(SELECT, 1.0, opDefault, color);
   glPopMatrix();
 
   //Pierna Izquierda
@@ -737,7 +721,7 @@ void _robot::seleccion(float color, float grosor, _opcion x){
   glTranslatef(-0.5,-0.25,0);
   glRotatef(giro_pie_izquierdo,1,0,0);
   glScalef(0.80,0.50,0.80);
-  piernaIzquierda.draw(SELECT, grosor, x, color_r, color_g, color_b);
+  piernaIzquierda.draw(SELECT, 1.0, opDefault, color);
   glPopMatrix();
 
   //Pierna Derecha
@@ -746,7 +730,7 @@ void _robot::seleccion(float color, float grosor, _opcion x){
   glTranslatef(0.5,-0.25,0);
   glRotatef(giro_pie_derecho,1,0,0);
   glScalef(0.95,0.50,0.95);
-  piernaDerecha.draw(SELECT, grosor, x, color_r, color_g, color_b);
+  piernaDerecha.draw(SELECT, 1.0, opDefault, color);
   glPopMatrix();
 }
 
