@@ -21,7 +21,7 @@ _puntos3D::_puntos3D()
 void _puntos3D::draw_puntos(int grosor, float color){
   glPointSize(grosor);
   if(color==0) glColor3f(color1._0, color1._1, color1._2);
-  else glColor3ub(color, color, color);
+  else glColor3ub(color, color+50, color);
 
   glEnableClientState(GL_VERTEX_ARRAY);
   glVertexPointer(3,GL_FLOAT,0,&vertices[0]);
@@ -48,7 +48,7 @@ void _triangulos3D::draw_aristas(int grosor, float color){
   glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
   glLineWidth(grosor);
   if(color==0) glColor3f(color1._0, color1._1, color1._2);
-  else glColor3ub(color, color, color);
+  else glColor3ub(color, color+50, color);
 
   glEnableClientState(GL_VERTEX_ARRAY);
   glVertexPointer(3,GL_FLOAT,0,&vertices[0]);
@@ -64,7 +64,7 @@ void _triangulos3D::draw_solido(float color){
   glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
   glLineWidth(0.7);
   if(color==0) glColor3f(color1._0, color1._1, color1._2);
-  else glColor3ub(color, color, color);
+  else glColor3ub(color, color+50, color);
   glBegin(GL_TRIANGLES);
   for (i=0;i<caras.size();i++){
     glVertex3fv((GLfloat *) &vertices[caras[i]._0]);
@@ -85,8 +85,8 @@ void _triangulos3D::draw_solido_ajedrez(float color){
 
   for (i=0;i<caras.size();i++){
     if(color!=0){
-      if(i%2==0) glColor3ub(color, color, color);
-      else glColor3ub(color-40, color-40, color-40);
+      if(i%2==0) glColor3ub(color, color+50, color);
+      else glColor3ub(color-40, color-40+50, color-40);
     }
     else{
     if (i%2==0) glColor3f(color1._0, color1._1, color1._2);
@@ -131,7 +131,6 @@ void _triangulos3D::draw( _modo modo, float grosor, _opcion &x, float color){
     color2._1=0; 
     color2._2=0; 
   }
-
   switch (modo){
   	case POINTS:draw_puntos(grosor, color);break;
   	case EDGES:draw_aristas(grosor, color);break;
@@ -469,9 +468,7 @@ void _rotacion::parametros(vector<_vertex3f> perfil, int num, _tipo_objeto tipo,
 _cabezaR::_cabezaR(){}
 
 void _cabezaR::draw( _modo modo, float grosor, _opcion &x, float color){
-  _opcion opcionUnicaColor;
-  if(color!=0) opcionUnicaColor=NO_OPTION;
-  else opcionUnicaColor=UNIQUECOLOR;
+  _opcion opcionUnicaColor=UNIQUECOLOR;
 
   
   //CABEZA
@@ -486,14 +483,14 @@ void _cabezaR::draw( _modo modo, float grosor, _opcion &x, float color){
   glTranslatef(0.5,1.2,0.9);
   glRotatef(-35,1,0,0);
   glScalef(0.1,0.2,0.1);
-  ojo_derecho.draw(modo, grosor,opcionUnicaColor, color);
+  ojo_derecho.draw(modo, grosor,opcionUnicaColor);
   glPopMatrix();
 
   glPushMatrix();
   glTranslatef(-0.5,1.2,0.9);
   glRotatef(-35,1,0,0);
   glScalef(0.1,0.2,0.1);
-  ojo_izquierdo.draw(modo, grosor, opcionUnicaColor, color);
+  ojo_izquierdo.draw(modo, grosor, opcionUnicaColor);
   glPopMatrix();
 
   //OREJAS

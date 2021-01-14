@@ -130,7 +130,7 @@ switch (t_objeto){
         case CONO: cono.draw(modo,2,opcion);break;
         case CILINDRO: cilindro.draw(modo,2,opcion);break;
         case GENERICO: copa.draw(modo,2,opcion);break;
-        case ARTICULADO: robot.draw(modo,2,opcion);break;
+        case ARTICULADO: robot.draw(modo,2,opcion, 100);break;
 	}
 	opcion=NO_OPTION;
 
@@ -469,7 +469,7 @@ glutInitWindowSize(Window_width,Window_high);
 
 // llamada para crear la ventana, indicando el titulo (no se visualiza hasta que se llama
 // al bucle de eventos)
-glutCreateWindow("PRACTICA - 2: Fernando Lojano");
+glutCreateWindow("PRACTICA - 5: Fernando Lojano");
 
 // asignación de la funcion llamada "dibujar" al evento de dibujo
 glutDisplayFunc(draw);
