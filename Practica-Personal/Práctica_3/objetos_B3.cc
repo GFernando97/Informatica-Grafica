@@ -725,6 +725,19 @@ _robot::_robot(){
   giro_pie_derecho=0;
 };
 
+/*
+    //Movimientos
+    case 'W': robot.giro_cabeza += v_giro_cabeza; break;
+    case 'E': robot.giro_cabeza -= v_giro_cabeza; break;
+    case 'H': robot.giro_mano_izquierda += v_giro_brazos; break;
+    case 'J': robot.giro_mano_izquierda -= v_giro_brazos; break;
+    case 'K': robot.giro_mano_derecha += v_giro_brazos; break;
+    case 'L': robot.giro_mano_derecha -= v_giro_brazos; break;
+    case 'V': robot.giro_pie_derecho -= v_giro_piernas; break;
+    case 'B': robot.giro_pie_derecho += v_giro_piernas; break;
+    case 'N': robot.giro_pie_izquierdo -= v_giro_piernas; break;
+    case 'M': robot.giro_pie_izquierdo += v_giro_piernas; break;  
+*/
 
 
 void _robot::draw(_modo modo, float grosor, _opcion &x){

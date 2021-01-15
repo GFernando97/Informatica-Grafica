@@ -11,6 +11,7 @@
 
 using namespace std;
 
+
 //Variables Teclado
 _opcion opcion=NO_OPTION;
 _tipo_objeto t_objeto=CUBO;
@@ -30,6 +31,16 @@ int Window_x=50,Window_y=50,Window_width=450,Window_high=450;
 int v_giro_cabeza = 5;
 int v_giro_brazos = 5;
 int v_giro_piernas = 5;
+
+bool firstTrace=false;
+bool secondTrace=false;
+bool thirdTrace=false;
+int iter1=0;
+int iter2=0;
+int iter3=0;
+
+bool activarAnimacion=false;
+
 
 // objetos
 _cubo cubo;
@@ -151,17 +162,74 @@ change_observer();
 draw_axis();
 draw_objects();
 
+
 if(t_objeto==ARTICULADO){
     glDrawBuffer(GL_BACK);
     clean_window();
     change_observer();
     robot.seleccion(100);
 }
-
 glFlush();
 }
 
 
+
+//**************************************************************************
+//Función Animación
+//***************************************************************************
+void animacion(){
+
+    if(activarAnimacion){
+        if(!firstTrace){
+            robot.giro_cabeza++;
+            robot.giro_pie_izquierdo++;
+            robot.giro_pie_derecho--;
+            robot.giro_mano_derecha++;
+            robot.giro_mano_izquierda--;
+            iter1++;
+  
+            if(iter1==25){
+                firstTrace=true;
+            }
+        }
+        
+        
+
+        if(firstTrace and !secondTrace){
+            robot.giro_cabeza--;
+            robot.giro_pie_izquierdo--;
+            robot.giro_pie_derecho++;
+            robot.giro_mano_derecha--;
+            robot.giro_mano_izquierda++;
+            iter2++;
+
+            if(iter2<50) secondTrace=false;
+            else{
+             secondTrace=true;
+            }
+
+        }
+
+        if(firstTrace and secondTrace and !thirdTrace){
+            robot.giro_cabeza++;
+            robot.giro_pie_izquierdo++;
+            robot.giro_pie_derecho--;
+            robot.giro_mano_derecha++;
+            robot.giro_mano_izquierda--;
+            iter3++;
+
+            if(iter3<25) thirdTrace=false;
+            else{
+             firstTrace=false;
+             secondTrace=false;
+             iter1=0;
+             iter2=0;
+             iter3=0;
+            }
+        }
+    }
+    glutPostRedisplay();   
+}
 
 //***************************************************************************
 // Funcion llamada cuando se produce un robot.cambiar[] en el tamaño de la ventana
@@ -246,6 +314,8 @@ switch (Tecla1){
 	case GLUT_KEY_DOWN:Observer_angle_x++;break;
 	case GLUT_KEY_PAGE_UP:Observer_distance*=1.2;break;
 	case GLUT_KEY_PAGE_DOWN:Observer_distance/=1.2;break;
+  case GLUT_KEY_F1:activarAnimacion=true;break;
+  case GLUT_KEY_F2:activarAnimacion=false;break;
     
 	}
 glutPostRedisplay();
@@ -484,6 +554,9 @@ glutSpecialFunc(special_key);
 // eventos ratón
     glutMouseFunc( clickRaton );
     glutMotionFunc( RatonMovido );
+
+    glutIdleFunc(animacion);
+
 
 // funcion de inicialización
 initialize();

@@ -31,6 +31,16 @@ int v_giro_cabeza = 5;
 int v_giro_brazos = 5;
 int v_giro_piernas = 5;
 
+bool firstTrace=false;
+bool secondTrace=false;
+bool thirdTrace=false;
+int iter1=0;
+int iter2=0;
+int iter3=0;
+
+bool activarAnimacion=false;
+
+
 // objetos
 _cubo cubo;
 _piramide piramide;
@@ -186,6 +196,67 @@ glutSwapBuffers();
 
 
 
+//**************************************************************************
+//Función Animación
+//***************************************************************************
+void animacion(){
+
+    if(activarAnimacion){
+        if(!firstTrace){
+            robot.giro_cabeza++;
+            robot.giro_pie_izquierdo++;
+            robot.giro_pie_derecho--;
+            robot.giro_mano_derecha++;
+            robot.giro_mano_izquierda--;
+            iter1++;
+  
+            if(iter1==25){
+                firstTrace=true;
+            }
+        }
+        
+        
+
+        if(firstTrace and !secondTrace){
+            robot.giro_cabeza--;
+            robot.giro_pie_izquierdo--;
+            robot.giro_pie_derecho++;
+            robot.giro_mano_derecha--;
+            robot.giro_mano_izquierda++;
+            iter2++;
+
+            if(iter2<50) secondTrace=false;
+            else{
+             secondTrace=true;
+            }
+
+        }
+
+        if(firstTrace and secondTrace and !thirdTrace){
+            robot.giro_cabeza++;
+            robot.giro_pie_izquierdo++;
+            robot.giro_pie_derecho--;
+            robot.giro_mano_derecha++;
+            robot.giro_mano_izquierda--;
+            iter3++;
+
+            if(iter3<25) thirdTrace=false;
+            else{
+             firstTrace=false;
+             secondTrace=false;
+             iter1=0;
+             iter2=0;
+             iter3=0;
+            }
+        }
+    }
+    glutPostRedisplay();   
+}
+
+
+
+
+
 //***************************************************************************
 // Funcion llamada cuando se produce un cambio en el tamaño de la ventana
 //
@@ -193,6 +264,7 @@ glutSwapBuffers();
 // nuevo ancho
 // nuevo alto
 //***************************************************************************
+
 
 void change_window_size(int Ancho1,int Alto1)
 {
@@ -275,6 +347,8 @@ switch (Tecla1){
 	case GLUT_KEY_DOWN:Observer_angle_x++;break;
 	case GLUT_KEY_PAGE_UP:Observer_distance*=1.2;break;
 	case GLUT_KEY_PAGE_DOWN:Observer_distance/=1.2;break;
+    case GLUT_KEY_F1:activarAnimacion=true;break;
+    case GLUT_KEY_F2:activarAnimacion=false;break;
         case GLUT_KEY_F5:alfa+=5;break;
         case GLUT_KEY_F6:alfa-=5;break;
         case GLUT_KEY_F7:beta+=5;break;
@@ -364,6 +438,8 @@ glutReshapeFunc(change_window_size);
 glutKeyboardFunc(normal_key);
 // asignación de la funcion llamada "tecla_Especial" al evento correspondiente
 glutSpecialFunc(special_key);
+
+glutIdleFunc(animacion);
 
 // funcion de inicialización
 initialize();
